@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.g_jugadores;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +34,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-G01 El super admin asciende a un jugador a admin y este gestiona partidas")
-  void ascender() {
+  void tcG01_ascender() {
     loginAs("superadmin");
     app.openTab("Jugadores");
     app.selectByValue(in(playerCard("QA Jugador MAD"), ROLE_SELECT), "admin");
@@ -50,7 +50,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-G02 El super admin bloquea a un jugador y este pierde el acceso")
-  void bloquear() {
+  void tcG02_bloquear() {
     loginAs("superadmin");
     app.openTab("Jugadores");
     String card = playerCard("QA Jugador FOE");
@@ -67,7 +67,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-G03 Asignar equipo a un jugador sin equipo le da acceso a ese equipo")
-  void asignarEquipo() {
+  void tcG03_asignarEquipo() {
     loginAs("superadmin");
     app.openTab("Jugadores");
     String card = playerCard("QA Sin Equipo");
@@ -87,7 +87,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-G04 Quitar la Junta Directiva a un miembro le oculta sus votaciones")
-  void quitarJunta() {
+  void tcG04_quitarJunta() {
     loginAs("superadmin");
     app.openTab("Jugadores");
     String card = playerCard("QA Junta 2");
@@ -104,7 +104,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-G05 Un admin que no es super admin no puede cambiar permisos")
-  void adminSinPermisos() {
+  void tcG05_adminSinPermisos() {
     loginAs("admin_foe");
     app.openTab("Jugadores");
     String card = playerCard("QA Junta 2");
@@ -118,7 +118,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-G06 El super admin no puede cambiarse el rol ni bloquearse a sí mismo")
-  void superNoSeToca() {
+  void tcG06_superNoSeToca() {
     loginAs("superadmin");
     app.openTab("Jugadores");
     String card = playerCard("QA Super Admin");
@@ -130,7 +130,7 @@ class JugadoresTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-G07 Un admin de equipo solo ve a los jugadores de su equipo")
-  void adminVeSuEquipo() {
+  void tcG07_adminVeSuEquipo() {
     loginAs("admin_mad");
     app.openTab("Jugadores");
     app.expectVisible(By.xpath(playerCard("QA Jugador MAD")));

@@ -58,7 +58,7 @@ def doc_title(title: str):
 
 
 @pytest.mark.case("TC-I01 Subir unos estatutos: se ven con enlace firmado y la URL pública no los sirve")
-def test_subir(app, login_as, files):
+def test_tc_i01_subir(app, login_as, files):
     login_as("admin_foe")
     title = f"QA E2E · Estatutos {int(time.time() * 1000)}"
     upload_statutes(app, files, title)
@@ -74,7 +74,7 @@ def test_subir(app, login_as, files):
 
 
 @pytest.mark.case("TC-I02 Eliminar un documento borra también el fichero")
-def test_eliminar(app, login_as, files):
+def test_tc_i02_eliminar(app, login_as, files):
     login_as("admin_foe")
     title = f"QA E2E · Estatutos a borrar {int(time.time() * 1000)}"
     upload_statutes(app, files, title)
@@ -99,7 +99,7 @@ def test_eliminar(app, login_as, files):
 
 
 @pytest.mark.case("TC-I03 El formulario exige título y solo acepta PDF")
-def test_validacion(app, login_as, files):
+def test_tc_i03_validacion(app, login_as, files):
     login_as("admin_foe")
     app.open_tab("Normas")
     app.click(button("+ Subir PDF"))
@@ -114,7 +114,7 @@ def test_validacion(app, login_as, files):
 
 
 @pytest.mark.case("TC-I04 Un jugador ve las normas de su equipo pero no puede subir ni borrar")
-def test_jugador_ve(app, login_as, files):
+def test_tc_i04_jugador_ve(app, login_as, files):
     login_as("admin_foe")
     title = f"QA E2E · Normas para jugadores {int(time.time() * 1000)}"
     upload_statutes(app, files, title)
@@ -127,7 +127,7 @@ def test_jugador_ve(app, login_as, files):
 
 
 @pytest.mark.case("TC-I05 Un jugador de otro equipo no ve las normas del FOE")
-def test_otro_equipo_no_ve(app, login_as, files):
+def test_tc_i05_otro_equipo_no_ve(app, login_as, files):
     login_as("admin_foe")
     title = f"QA E2E · Normas solo FOE {int(time.time() * 1000)}"
     upload_statutes(app, files, title)

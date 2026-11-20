@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.e_gobernanza;
 
 import static lab.qa.pages.AppPage.*;
 
@@ -34,7 +34,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-E01 La Junta Directiva abre un expediente sancionador")
-  void abrirExpediente() {
+  void tcE01_abrirExpediente() {
     loginAs("admin_foe");
     app.openFoeSection(DIRECTIVA);
     app.click(button("+ Nueva votación"));
@@ -57,7 +57,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-E02 El propuesto para sanción queda recusado y no puede votar")
-  void recusado() {
+  void tcE02_recusado() {
     loginAs("junta2");
     app.openFoeSection(DIRECTIVA);
     String card = pollCard("QA · Sanción a QA Junta 2 (recusación)");
@@ -69,7 +69,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-E03 El expediente se cierra solo al votar el último miembro habilitado")
-  void cierrePorCuorum() {
+  void tcE03_cierrePorCuorum() {
     loginAs("junta2");
     app.openFoeSection(DIRECTIVA);
     String card = pollCard("QA · Sanción con cuórum pendiente");
@@ -81,7 +81,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-E04 La 3ª falta leve en un año se escala a Grave")
-  void escaladoLeve() {
+  void tcE04_escaladoLeve() {
     loginAs("junta2");
     app.openFoeSection(DIRECTIVA);
     app.click(in(pollCard("QA · Tercera falta leve"), A_FAVOR));
@@ -91,7 +91,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-E05 La 3ª falta grave en un año se escala a Muy Grave")
-  void escaladoGrave() {
+  void tcE05_escaladoGrave() {
     loginAs("junta2");
     app.openFoeSection(DIRECTIVA);
     app.click(in(pollCard("QA · Tercera falta grave"), A_FAVOR));
@@ -101,7 +101,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-E06 Con mayoría en contra el expediente se cierra sin sanción")
-  void desestimada() {
+  void tcE06_desestimada() {
     loginAs("junta2");
     app.openFoeSection(DIRECTIVA);
     String card = pollCard("QA · Sanción a desestimar");
@@ -113,7 +113,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-E07 Solo quien convoca (o el super admin) puede cerrar una votación a mano")
-  void soloConvocanteCierra() {
+  void tcE07_soloConvocanteCierra() {
     loginAs("junta2"); // no convocó la votación del seed
     app.openFoeSection(DIRECTIVA);
     app.expectHidden(in(pollCard("QA · Votación de la Junta Directiva"), btn("Cerrar y resolver")));
@@ -122,7 +122,7 @@ class GobernanzaTest extends BaseTest {
   @Test
   @Order(8)
   @DisplayName("TC-E08 Quien convocó la votación puede cerrarla a mano")
-  void convocanteCierra() {
+  void tcE08_convocanteCierra() {
     loginAs("admin_foe");
     app.openFoeSection(DIRECTIVA);
     String card = pollCard("QA · Votación de la Junta Directiva");

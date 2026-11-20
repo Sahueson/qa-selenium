@@ -19,7 +19,7 @@ def assert_sees(titles: list[str], expected: list[str]) -> None:
 
 
 @pytest.mark.case("TC-A06 Jugador MAD solo ve partidas MAD y no tiene pestaña FOE")
-def test_jugador_mad(app, login_as):
+def test_tc_a06_jugador_mad(app, login_as):
     login_as("player_mad")
     titles = app.visible_event_titles()
     assert_sees(titles, MAD)
@@ -28,7 +28,7 @@ def test_jugador_mad(app, login_as):
 
 
 @pytest.mark.case("TC-A07 Jugador FOE ve las partidas FOE y ninguna MAD")
-def test_jugador_foe(app, login_as):
+def test_tc_a07_jugador_foe(app, login_as):
     login_as("player_foe")
     titles = app.visible_event_titles()
     assert_sees(titles, FOE)
@@ -37,13 +37,13 @@ def test_jugador_foe(app, login_as):
 
 
 @pytest.mark.case("TC-A08 Super admin ve las partidas de ambos equipos")
-def test_super_admin(app, login_as):
+def test_tc_a08_super_admin(app, login_as):
     login_as("superadmin")
     assert_sees(app.visible_event_titles(), MAD + FOE)
 
 
 @pytest.mark.case("TC-A09 Jugador FOE sin cargo no ve la Junta Directiva")
-def test_jugador_foe_sin_junta(app, login_as):
+def test_tc_a09_jugador_foe_sin_junta(app, login_as):
     login_as("player_foe")
     app.open_tab("FOE · Votos y Faltas")
     app.expect_visible(button("Faltas y Sanciones"))
@@ -52,7 +52,7 @@ def test_jugador_foe_sin_junta(app, login_as):
 
 
 @pytest.mark.case("TC-A10 Miembro de la Junta Directiva ve su votación")
-def test_miembro_junta(app, login_as):
+def test_tc_a10_miembro_junta(app, login_as):
     login_as("admin_foe")
     app.open_tab("FOE · Votos y Faltas")
     app.click(button("Votos · Junta Directiva"))

@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.d_asistencia;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,7 +36,7 @@ class AsistenciaTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-D01 El % anual se calcula sobre las partidas ya jugadas")
-  void porcentajeAnual() {
+  void tcD01_porcentajeAnual() {
     loginAs("admin_foe");
     app.openTab("Jugadores");
     By att = attendanceOf("QA Jugador FOE"); // asistió a 1 de 3,5
@@ -47,7 +47,7 @@ class AsistenciaTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-D02 Una MilSim pesa x1,5 en la asistencia")
-  void milsimPesaMas() {
+  void tcD02_milsimPesaMas() {
     loginAs("admin_foe");
     app.openTab("Jugadores");
     // junta2 solo fue a la MilSim pasada: suma 1,5, no 1.
@@ -57,7 +57,7 @@ class AsistenciaTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-D03 Las partidas durante una excedencia aprobada no restan")
-  void excedenciaNoResta() {
+  void tcD03_excedenciaNoResta() {
     loginAs("admin_foe");
     app.openTab("Jugadores");
     // Sin la excedencia serían 1,5/3,5 = 43 %; con ella la pasada abierta no computa.
@@ -69,7 +69,7 @@ class AsistenciaTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-D04 Cerrar el acta con asistencia actualiza el % del jugador")
-  void cerrarActaActualiza() {
+  void tcD04_cerrarActaActualiza() {
     loginAs("admin_foe");
     app.openEvent("QA FOE · Partida pasada abierta");
     By box = regCheckbox("QA Jugador FOE");
@@ -89,7 +89,7 @@ class AsistenciaTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-D05 Una marca hecha nada más abrir la partida no se pierde con la recarga")
-  void marcaNoSePierde() {
+  void tcD05_marcaNoSePierde() {
     loginAs("junta2");
     app.openTab("Partidas");
     app.js("window.__qa.delay = { pattern: '/rest/v1/event_registrations', ms: 1500 };");

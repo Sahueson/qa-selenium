@@ -17,7 +17,7 @@ def ficha_button(prefix: str):
 
 
 @pytest.mark.case("TC-SMOKE La app carga y muestra el login QA")
-def test_smoke(app, role):
+def test_tc_smoke_smoke(app, role):
     role("Visitante")
     app.open()
     app.expect_title_not_empty()
@@ -25,7 +25,7 @@ def test_smoke(app, role):
 
 
 @pytest.mark.case("TC-A01 Jugador con equipo entra y ve la navegación completa")
-def test_jugador_con_equipo_entra(app, login_as):
+def test_tc_a01_jugador_con_equipo_entra(app, login_as):
     user = login_as("player_mad")
     app.expect_contains_text(PROFILE_BUTTON, user.nickname)
     for tab in ("Calendario", "Partidas", "Jugadores", "Normas"):
@@ -34,7 +34,7 @@ def test_jugador_con_equipo_entra(app, login_as):
 
 
 @pytest.mark.case("TC-A01b Usuario sin equipo queda pendiente de asignación")
-def test_sin_equipo_pendiente(app, login_as):
+def test_tc_a01b_sin_equipo_pendiente(app, login_as):
     login_as("sinequipo")
     app.expect_visible(heading("Pendiente de asignación de equipo"))
     app.expect_hidden(NAV)
@@ -44,13 +44,13 @@ def test_sin_equipo_pendiente(app, login_as):
 # Detectó un bug real en Playwright (19-nov-2026, ya corregido en el staging): la RLS no dejaba
 # a un bloqueado leer su propio perfil y veía "Pendiente de asignación".
 @pytest.mark.case("TC-A02 Usuario bloqueado ve acceso denegado")
-def test_bloqueado_acceso_denegado(app, login_as):
+def test_tc_a02_bloqueado_acceso_denegado(app, login_as):
     login_as("blocked")
     app.expect_visible(heading("Acceso denegado"))
 
 
 @pytest.mark.case("TC-A02b Usuario bloqueado no accede a ningún dato")
-def test_bloqueado_sin_datos(app, login_as):
+def test_tc_a02b_bloqueado_sin_datos(app, login_as):
     login_as("blocked")
     app.expect_visible((By.XPATH, "//*[text()[contains(.,'Pendiente de asignación') or contains(.,'Acceso denegado')]]"))
     app.expect_hidden(NAV)
@@ -59,7 +59,7 @@ def test_bloqueado_sin_datos(app, login_as):
 
 
 @pytest.mark.case("TC-A04 Contraseña incorrecta muestra error y no entra")
-def test_password_incorrecta(app, role):
+def test_tc_a04_password_incorrecta(app, role):
     role("Visitante")
     app.open()
     app.login(qa_user("player_mad").email, "contraseña-incorrecta")
@@ -69,7 +69,7 @@ def test_password_incorrecta(app, role):
 
 
 @pytest.mark.case("TC-A05 Cerrar sesión vuelve a la pantalla de login")
-def test_cerrar_sesion(app, login_as):
+def test_tc_a05_cerrar_sesion(app, login_as):
     login_as("player_mad")
     app.click(LOGOUT_BUTTON)
     app.expect_visible(LOGIN_BUTTON)
@@ -77,7 +77,7 @@ def test_cerrar_sesion(app, login_as):
 
 
 @pytest.mark.case("TC-A03 Editar la ficha de operador guarda equipaciones y roles")
-def test_editar_ficha(app, login_as):
+def test_tc_a03_editar_ficha(app, login_as):
     user = login_as("player_foe")
     app.click(PROFILE_BUTTON)
     app.expect_visible((By.XPATH, FICHA))

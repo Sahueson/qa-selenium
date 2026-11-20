@@ -19,7 +19,7 @@ def modal_button(t: str):
 
 
 @pytest.mark.case("TC-C01 Inscribirse preselecciona la equipación de la partida y avisa si no la tienes")
-def test_preselecciona_equipacion_partida(app, login_as):
+def test_tc_c01_preselecciona_equipacion_partida(app, login_as):
     # junta2 tiene Árido en su ficha; la partida recomienda Tiger Stripe. (Con la ficha vacía la
     # app no avisa: el aviso solo sale si tienes equipaciones marcadas y no es ninguna de ellas.)
     login_as("junta2")
@@ -36,7 +36,7 @@ def test_preselecciona_equipacion_partida(app, login_as):
 
 
 @pytest.mark.case("TC-C07 Sin equipación en la partida se preselecciona la de la ficha del jugador")
-def test_preselecciona_equipacion_ficha(app, login_as):
+def test_tc_c07_preselecciona_equipacion_ficha(app, login_as):
     login_as("junta2")  # ficha: Árido + Médico
     app.open_event("QA FOE · MilSim próxima")  # sin equipación recomendada
 
@@ -46,7 +46,7 @@ def test_preselecciona_equipacion_ficha(app, login_as):
 
 
 @pytest.mark.case("TC-C04 Darse de baja a más de 48 h libera la plaza")
-def test_baja_libera_plaza(app, login_as):
+def test_tc_c04_baja_libera_plaza(app, login_as):
     login_as("player_foe")
     app.open_event("QA FOE · Inscripción abierta")
     app.click(modal_button("Apuntarse"))
@@ -59,7 +59,7 @@ def test_baja_libera_plaza(app, login_as):
 
 
 @pytest.mark.case("TC-C02 A menos de 48 h no se permite darse de baja")
-def test_menos_48h_sin_baja(app, login_as):
+def test_tc_c02_menos_48h_sin_baja(app, login_as):
     login_as("player_foe")  # inscrito por el seed
     app.open_event("QA FOE · Partida en menos de 48 h")
 
@@ -70,7 +70,7 @@ def test_menos_48h_sin_baja(app, login_as):
 
 
 @pytest.mark.case("TC-C03 Con una excedencia aprobada no se puede inscribir en esas fechas")
-def test_excedencia_sin_inscripcion(app, login_as):
+def test_tc_c03_excedencia_sin_inscripcion(app, login_as):
     login_as("player_mad")  # excedencia aprobada que cubre la partida
     app.open_tab("Partidas")
     app.expect_visible(in_(event_card("QA MAD · Partida en excedencia"), btn("En excedencia")))
@@ -81,7 +81,7 @@ def test_excedencia_sin_inscripcion(app, login_as):
 
 
 @pytest.mark.case("TC-C05 Una partida ya finalizada no admite inscripciones")
-def test_finalizada_sin_inscripcion(app, login_as):
+def test_tc_c05_finalizada_sin_inscripcion(app, login_as):
     login_as("player_foe")
     app.open_event("QA FOE · Partida pasada abierta")
 
@@ -90,7 +90,7 @@ def test_finalizada_sin_inscripcion(app, login_as):
 
 
 @pytest.mark.case("TC-C06 Una partida cancelada no admite inscripciones")
-def test_cancelada_sin_inscripcion(app, login_as):
+def test_tc_c06_cancelada_sin_inscripcion(app, login_as):
     login_as("player_foe")
     app.open_event("QA FOE · Partida cancelada")
 

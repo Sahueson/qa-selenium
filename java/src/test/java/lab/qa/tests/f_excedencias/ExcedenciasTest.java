@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.f_excedencias;
 
 import java.time.LocalDate;
 import static lab.qa.pages.AppPage.*;
@@ -39,7 +39,7 @@ class ExcedenciasTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-F01 Un jugador solicita una excedencia y queda pendiente de la Junta")
-  void solicitar() {
+  void tcF01_solicitar() {
     loginAs("player_foe");
     requestLeave(40, 80, "Excedencia E2E · lesión");
     app.expectToast("Solicitud de excedencia enviada.");
@@ -51,7 +51,7 @@ class ExcedenciasTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-F02 Una excedencia de menos de 1 mes se rechaza")
-  void menosDeUnMes() {
+  void tcF02_menosDeUnMes() {
     loginAs("player_foe");
     requestLeave(40, 45, "Excedencia E2E · corta");
     app.expectToast("La excedencia debe tener una duración mínima de 1 mes");
@@ -61,7 +61,7 @@ class ExcedenciasTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-F03 La Junta Directiva concede una solicitud pendiente")
-  void juntaConcede() {
+  void tcF03_juntaConcede() {
     loginAs("admin_foe");
     app.openLeavesPanel();
     String row = leaveRow("Solicitud QA pendiente"); // de QA Jugador FOE (seed)
@@ -74,7 +74,7 @@ class ExcedenciasTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-F04 Nadie puede concederse su propia excedencia")
-  void noAutoconcesion() {
+  void tcF04_noAutoconcesion() {
     loginAs("admin_foe"); // es de la Junta Directiva, pero la solicitud es suya
     app.openLeavesPanel();
     String row = leaveRow("Solicitud QA propia");
@@ -85,7 +85,7 @@ class ExcedenciasTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-F05 Un jugador sin cargo no puede conceder excedencias")
-  void jugadorNoConcede() {
+  void tcF05_jugadorNoConcede() {
     loginAs("player_foe");
     app.openLeavesPanel();
     app.expectCount(button("Conceder"), 0);

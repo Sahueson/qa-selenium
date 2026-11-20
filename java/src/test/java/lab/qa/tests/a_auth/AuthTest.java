@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.a_auth;
 
 import static lab.qa.pages.AppPage.*;
 
@@ -35,7 +35,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-SMOKE La app carga y muestra el login QA")
-  void smoke() {
+  void tcSmoke_smoke() {
     role("Visitante");
     app.open();
     app.expectTitleNotEmpty();
@@ -45,7 +45,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-A01 Jugador con equipo entra y ve la navegación completa")
-  void jugadorConEquipoEntra() {
+  void tcA01_jugadorConEquipoEntra() {
     QaUsers.QaUser user = loginAs("player_mad");
     app.expectContainsText(PROFILE_BUTTON, user.nickname());
     for (String tab : new String[] {"Calendario", "Partidas", "Jugadores", "Normas"}) {
@@ -57,7 +57,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-A01b Usuario sin equipo queda pendiente de asignación")
-  void sinEquipoPendiente() {
+  void tcA01b_sinEquipoPendiente() {
     loginAs("sinequipo");
     app.expectVisible(heading("Pendiente de asignación de equipo"));
     app.expectHidden(NAV);
@@ -69,7 +69,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-A02 Usuario bloqueado ve acceso denegado")
-  void bloqueadoAccesoDenegado() {
+  void tcA02_bloqueadoAccesoDenegado() {
     loginAs("blocked");
     app.expectVisible(heading("Acceso denegado"));
   }
@@ -77,7 +77,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-A02b Usuario bloqueado no accede a ningún dato")
-  void bloqueadoSinDatos() {
+  void tcA02b_bloqueadoSinDatos() {
     loginAs("blocked");
     app.expectVisible(By.xpath("//*[text()[contains(.,'Pendiente de asignación') or contains(.,'Acceso denegado')]]"));
     app.expectHidden(NAV);
@@ -88,7 +88,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-A04 Contraseña incorrecta muestra error y no entra")
-  void passwordIncorrecta() {
+  void tcA04_passwordIncorrecta() {
     role("Visitante");
     app.open();
     app.login(QaUsers.get("player_mad").email(), "contraseña-incorrecta");
@@ -100,7 +100,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-A05 Cerrar sesión vuelve a la pantalla de login")
-  void cerrarSesion() {
+  void tcA05_cerrarSesion() {
     loginAs("player_mad");
     app.click(LOGOUT_BUTTON);
     app.expectVisible(LOGIN_BUTTON);
@@ -110,7 +110,7 @@ class AuthTest extends BaseTest {
   @Test
   @Order(8)
   @DisplayName("TC-A03 Editar la ficha de operador guarda equipaciones y roles")
-  void editarFicha() {
+  void tcA03_editarFicha() {
     QaUsers.QaUser user = loginAs("player_foe");
     app.click(PROFILE_BUTTON);
     app.expectVisible(By.xpath(FICHA));

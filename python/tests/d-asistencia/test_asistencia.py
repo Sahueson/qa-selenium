@@ -15,7 +15,7 @@ def reg_checkbox(nickname: str):
 
 
 @pytest.mark.case("TC-D01 El % anual se calcula sobre las partidas ya jugadas")
-def test_porcentaje_anual(app, login_as):
+def test_tc_d01_porcentaje_anual(app, login_as):
     login_as("admin_foe")
     app.open_tab("Jugadores")
     att = attendance_of("QA Jugador FOE")  # asistió a 1 de 3,5
@@ -24,7 +24,7 @@ def test_porcentaje_anual(app, login_as):
 
 
 @pytest.mark.case("TC-D02 Una MilSim pesa x1,5 en la asistencia")
-def test_milsim_pesa_mas(app, login_as):
+def test_tc_d02_milsim_pesa_mas(app, login_as):
     login_as("admin_foe")
     app.open_tab("Jugadores")
     # junta2 solo fue a la MilSim pasada: suma 1,5, no 1.
@@ -32,7 +32,7 @@ def test_milsim_pesa_mas(app, login_as):
 
 
 @pytest.mark.case("TC-D03 Las partidas durante una excedencia aprobada no restan")
-def test_excedencia_no_resta(app, login_as):
+def test_tc_d03_excedencia_no_resta(app, login_as):
     login_as("admin_foe")
     app.open_tab("Jugadores")
     # Sin la excedencia serían 1,5/3,5 = 43 %; con ella la pasada abierta no computa.
@@ -42,7 +42,7 @@ def test_excedencia_no_resta(app, login_as):
 
 
 @pytest.mark.case("TC-D04 Cerrar el acta con asistencia actualiza el % del jugador")
-def test_cerrar_acta_actualiza(app, login_as):
+def test_tc_d04_cerrar_acta_actualiza(app, login_as):
     login_as("admin_foe")
     app.open_event("QA FOE · Partida pasada abierta")
     box = reg_checkbox("QA Jugador FOE")
@@ -60,7 +60,7 @@ def test_cerrar_acta_actualiza(app, login_as):
 # recarga reiniciaba el borrador de asistencia, borrando lo ya marcado. Para que la recarga llegue
 # SIEMPRE después de la marca, el script inyectado (browser.py) la retrasa 1,5 s.
 @pytest.mark.case("TC-D05 Una marca hecha nada más abrir la partida no se pierde con la recarga")
-def test_marca_no_se_pierde(app, login_as):
+def test_tc_d05_marca_no_se_pierde(app, login_as):
     login_as("junta2")
     app.open_tab("Partidas")
     app.driver.execute_script("window.__qa.delay = { pattern: '/rest/v1/event_registrations', ms: 1500 };")

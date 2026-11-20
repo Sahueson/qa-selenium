@@ -38,7 +38,7 @@ def card_button(title: str, t: str):
 
 
 @pytest.mark.case("TC-B01 Crear partida valida los campos obligatorios")
-def test_crear_valida_campos(app, login_as):
+def test_tc_b01_crear_valida_campos(app, login_as):
     login_as("admin_mad")
     app.click(NEW_EVENT_BUTTON)
     submit, error = in_(NEW_FORM, btn("Crear partida")), in_(NEW_FORM, "//*[contains(@class,'modal__error')]")
@@ -58,7 +58,7 @@ def test_crear_valida_campos(app, login_as):
 
 
 @pytest.mark.case("TC-B01b Un admin crea una partida y aparece en la lista")
-def test_crear_partida(app, login_as):
+def test_tc_b01b_crear_partida(app, login_as):
     login_as("admin_mad")
     title = f"QA E2E · Partida creada {int(time.time() * 1000)}"
     app.click(NEW_EVENT_BUTTON)
@@ -75,7 +75,7 @@ def test_crear_partida(app, login_as):
 
 
 @pytest.mark.case("TC-B02 Cancelar una partida sin contar asistencia")
-def test_cancelar_sin_asistencia(app, login_as):
+def test_tc_b02_cancelar_sin_asistencia(app, login_as):
     login_as("admin_mad")
     app.open_event("QA MAD · Partida próxima")
     app.click(modal_button("Cancelar partida"))
@@ -89,7 +89,7 @@ def test_cancelar_sin_asistencia(app, login_as):
 
 
 @pytest.mark.case("TC-B02b Cancelar una partida contando asistencia permite pasar lista")
-def test_cancelar_con_asistencia(app, login_as):
+def test_tc_b02b_cancelar_con_asistencia(app, login_as):
     login_as("admin_foe")
     app.open_event("QA FOE · Partida próxima")
     app.click(modal_button("Cancelar partida"))
@@ -101,7 +101,7 @@ def test_cancelar_con_asistencia(app, login_as):
 
 
 @pytest.mark.case("TC-B03 Cerrar el acta bloquea la partida en solo lectura")
-def test_cerrar_acta(app, login_as):
+def test_tc_b03_cerrar_acta(app, login_as):
     login_as("admin_foe")
     app.open_event("QA FOE · Partida finalizada")
     app.click(modal_button("Guardar asistencia y bloquear partida"))
@@ -114,7 +114,7 @@ def test_cerrar_acta(app, login_as):
 
 
 @pytest.mark.case("TC-B04 Un jugador no puede editar ni cancelar partidas ajenas")
-def test_jugador_no_edita(app, login_as):
+def test_tc_b04_jugador_no_edita(app, login_as):
     login_as("player_foe")
     app.open_event("QA FOE · MilSim próxima")
     app.expect_hidden(modal_button("Editar partida"))
@@ -122,7 +122,7 @@ def test_jugador_no_edita(app, login_as):
 
 
 @pytest.mark.case("TC-B05 Un admin edita una partida de su equipo")
-def test_editar(app, login_as):
+def test_tc_b05_editar(app, login_as):
     login_as("admin_mad")
     title = f"QA MAD · Partida editada {int(time.time() * 1000)}"
     app.open_tab("Partidas")
@@ -137,7 +137,7 @@ def test_editar(app, login_as):
 
 
 @pytest.mark.case("TC-B06 Reactivar una partida cancelada")
-def test_reactivar(app, login_as):
+def test_tc_b06_reactivar(app, login_as):
     login_as("admin_foe")
     app.open_event("QA FOE · Partida cancelada")
     app.click(modal_button("Reactivar partida"))
@@ -148,7 +148,7 @@ def test_reactivar(app, login_as):
 
 
 @pytest.mark.case("TC-B07 Eliminar una partida pide confirmación y la borra del servidor")
-def test_eliminar(app, login_as):
+def test_tc_b07_eliminar(app, login_as):
     login_as("admin_mad")
     app.open_tab("Partidas")
     card = "QA MAD · Partida a eliminar"
@@ -168,7 +168,7 @@ def test_eliminar(app, login_as):
 
 
 @pytest.mark.case("TC-B08 Una partida cerrada no se puede editar ni eliminar desde la lista")
-def test_cerrada_sin_botones(app, login_as):
+def test_tc_b08_cerrada_sin_botones(app, login_as):
     login_as("admin_mad")
     app.open_tab("Partidas")
     card = "QA MAD · Partida cerrada"
@@ -178,7 +178,7 @@ def test_cerrada_sin_botones(app, login_as):
 
 
 @pytest.mark.case("TC-B09 Un jugador no puede pedir el desbloqueo de un acta")
-def test_jugador_no_desbloquea(app, login_as):
+def test_tc_b09_jugador_no_desbloquea(app, login_as):
     login_as("player_mad")
     app.open_event("QA MAD · Partida cerrada")
     app.expect_visible(modal_text(LOCKED))
@@ -186,7 +186,7 @@ def test_jugador_no_desbloquea(app, login_as):
 
 
 @pytest.mark.case("TC-B10 Desbloquear un acta MAD: la pide su admin y la aprueba el super admin")
-def test_desbloqueo_mad(app, login_as):
+def test_tc_b10_desbloqueo_mad(app, login_as):
     login_as("admin_mad")
     app.open_event("QA MAD · Partida cerrada")
     app.click(modal_button("Solicitar desbloqueo para editar"))
@@ -204,7 +204,7 @@ def test_desbloqueo_mad(app, login_as):
 
 
 @pytest.mark.case("TC-B11 Desbloquear un acta FOE necesita a los otros dos responsables y se puede cancelar")
-def test_desbloqueo_foe(app, login_as):
+def test_tc_b11_desbloqueo_foe(app, login_as):
     title = "QA FOE · Partida pasada abierta"
     login_as("admin_foe")
     app.open_event(title)

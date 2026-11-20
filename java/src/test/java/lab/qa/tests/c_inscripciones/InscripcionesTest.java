@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.c_inscripciones;
 
 import static lab.qa.pages.AppPage.*;
 
@@ -33,7 +33,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-C01 Inscribirse preselecciona la equipación de la partida y avisa si no la tienes")
-  void preseleccionaEquipacionPartida() {
+  void tcC01_preseleccionaEquipacionPartida() {
     // junta2 tiene Árido en su ficha; la partida recomienda Tiger Stripe. (Con la ficha vacía la
     // app no avisa: el aviso solo sale si tienes equipaciones marcadas y no es ninguna de ellas.)
     loginAs("junta2");
@@ -51,7 +51,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-C07 Sin equipación en la partida se preselecciona la de la ficha del jugador")
-  void preseleccionaEquipacionFicha() {
+  void tcC07_preseleccionaEquipacionFicha() {
     loginAs("junta2"); // ficha: Árido + Médico
     app.openEvent("QA FOE · MilSim próxima"); // sin equipación recomendada
     app.expectValue(REGISTRATION_GEAR, "Árido");
@@ -62,7 +62,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-C04 Darse de baja a más de 48 h libera la plaza")
-  void bajaLiberaPlaza() {
+  void tcC04_bajaLiberaPlaza() {
     loginAs("player_foe");
     app.openEvent("QA FOE · Inscripción abierta");
     app.click(modalButton("Apuntarse"));
@@ -77,7 +77,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-C02 A menos de 48 h no se permite darse de baja")
-  void menos48hSinBaja() {
+  void tcC02_menos48hSinBaja() {
     loginAs("player_foe"); // inscrito por el seed
     app.openEvent("QA FOE · Partida en menos de 48 h");
     app.expectVisible(modalText("Faltan menos de 48 horas para la partida"));
@@ -89,7 +89,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-C03 Con una excedencia aprobada no se puede inscribir en esas fechas")
-  void excedenciaSinInscripcion() {
+  void tcC03_excedenciaSinInscripcion() {
     loginAs("player_mad"); // excedencia aprobada que cubre la partida
     app.openTab("Partidas");
     app.expectVisible(in(eventCard("QA MAD · Partida en excedencia"), btn("En excedencia")));
@@ -102,7 +102,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-C05 Una partida ya finalizada no admite inscripciones")
-  void finalizadaSinInscripcion() {
+  void tcC05_finalizadaSinInscripcion() {
     loginAs("player_foe");
     app.openEvent("QA FOE · Partida pasada abierta");
     app.expectVisible(modalText("ya ha finalizado; las inscripciones y bajas están cerradas"));
@@ -112,7 +112,7 @@ class InscripcionesTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-C06 Una partida cancelada no admite inscripciones")
-  void canceladaSinInscripcion() {
+  void tcC06_canceladaSinInscripcion() {
     loginAs("player_foe");
     app.openEvent("QA FOE · Partida cancelada");
     app.expectVisible(modalText("CANCELADA · NO CUENTA"));

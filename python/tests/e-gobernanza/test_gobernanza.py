@@ -15,7 +15,7 @@ A_FAVOR, EN_CONTRA = btn_containing("A favor de sancionar"), btn_containing("En 
 
 
 @pytest.mark.case("TC-E01 La Junta Directiva abre un expediente sancionador")
-def test_abrir_expediente(app, login_as):
+def test_tc_e01_abrir_expediente(app, login_as):
     login_as("admin_foe")
     app.open_foe_section(DIRECTIVA)
     app.click(button("+ Nueva votación"))
@@ -38,7 +38,7 @@ def test_abrir_expediente(app, login_as):
 
 
 @pytest.mark.case("TC-E02 El propuesto para sanción queda recusado y no puede votar")
-def test_recusado(app, login_as):
+def test_tc_e02_recusado(app, login_as):
     login_as("junta2")
     app.open_foe_section(DIRECTIVA)
     card = poll_card("QA · Sanción a QA Junta 2 (recusación)")
@@ -48,7 +48,7 @@ def test_recusado(app, login_as):
 
 
 @pytest.mark.case("TC-E03 El expediente se cierra solo al votar el último miembro habilitado")
-def test_cierre_por_cuorum(app, login_as):
+def test_tc_e03_cierre_por_cuorum(app, login_as):
     login_as("junta2")
     app.open_foe_section(DIRECTIVA)
     card = poll_card("QA · Sanción con cuórum pendiente")
@@ -58,7 +58,7 @@ def test_cierre_por_cuorum(app, login_as):
 
 
 @pytest.mark.case("TC-E04 La 3ª falta leve en un año se escala a Grave")
-def test_escalado_leve(app, login_as):
+def test_tc_e04_escalado_leve(app, login_as):
     login_as("junta2")
     app.open_foe_section(DIRECTIVA)
     app.click(in_(poll_card("QA · Tercera falta leve"), A_FAVOR))
@@ -66,7 +66,7 @@ def test_escalado_leve(app, login_as):
 
 
 @pytest.mark.case("TC-E05 La 3ª falta grave en un año se escala a Muy Grave")
-def test_escalado_grave(app, login_as):
+def test_tc_e05_escalado_grave(app, login_as):
     login_as("junta2")
     app.open_foe_section(DIRECTIVA)
     app.click(in_(poll_card("QA · Tercera falta grave"), A_FAVOR))
@@ -74,7 +74,7 @@ def test_escalado_grave(app, login_as):
 
 
 @pytest.mark.case("TC-E06 Con mayoría en contra el expediente se cierra sin sanción")
-def test_desestimada(app, login_as):
+def test_tc_e06_desestimada(app, login_as):
     login_as("junta2")
     app.open_foe_section(DIRECTIVA)
     card = poll_card("QA · Sanción a desestimar")
@@ -84,14 +84,14 @@ def test_desestimada(app, login_as):
 
 
 @pytest.mark.case("TC-E07 Solo quien convoca (o el super admin) puede cerrar una votación a mano")
-def test_solo_convocante_cierra(app, login_as):
+def test_tc_e07_solo_convocante_cierra(app, login_as):
     login_as("junta2")  # no convocó la votación del seed
     app.open_foe_section(DIRECTIVA)
     app.expect_hidden(in_(poll_card("QA · Votación de la Junta Directiva"), btn("Cerrar y resolver")))
 
 
 @pytest.mark.case("TC-E08 Quien convocó la votación puede cerrarla a mano")
-def test_convocante_cierra(app, login_as):
+def test_tc_e08_convocante_cierra(app, login_as):
     login_as("admin_foe")
     app.open_foe_section(DIRECTIVA)
     card = poll_card("QA · Votación de la Junta Directiva")

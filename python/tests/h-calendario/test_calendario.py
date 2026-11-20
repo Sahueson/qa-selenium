@@ -30,7 +30,7 @@ def open_form(app) -> None:
 
 
 @pytest.mark.case("TC-H01 Un admin marca fechas sin partida para su equipo")
-def test_marcar(app, login_as):
+def test_tc_h01_marcar(app, login_as):
     login_as("admin_mad")
     open_form(app)
     reason = f"QA E2E · Puente {int(time.time() * 1000)}"
@@ -45,7 +45,7 @@ def test_marcar(app, login_as):
 
 
 @pytest.mark.case("TC-H02 La fecha de fin no puede ser anterior a la de inicio")
-def test_fin_antes_que_inicio(app, login_as):
+def test_tc_h02_fin_antes_que_inicio(app, login_as):
     login_as("admin_mad")
     open_form(app)
     reason = f"QA E2E · Fechas al revés {int(time.time() * 1000)}"
@@ -63,7 +63,7 @@ def test_fin_antes_que_inicio(app, login_as):
 
 
 @pytest.mark.case("TC-H03 Un admin de un solo equipo no puede marcar fechas para ambos")
-def test_admin_un_equipo(app, login_as):
+def test_tc_h03_admin_un_equipo(app, login_as):
     login_as("admin_mad")
     open_form(app)
     options = [o.text for o in Select(app.expect_visible((By.XPATH, f"{FORM}//select"))).options]
@@ -71,7 +71,7 @@ def test_admin_un_equipo(app, login_as):
 
 
 @pytest.mark.case("TC-H04 El super admin puede marcar fechas para ambos equipos")
-def test_super_ambos(app, login_as):
+def test_tc_h04_super_ambos(app, login_as):
     login_as("superadmin")
     open_form(app)
     options = [o.text for o in Select(app.expect_visible((By.XPATH, f"{FORM}//select"))).options]
@@ -82,7 +82,7 @@ def test_super_ambos(app, login_as):
 
 
 @pytest.mark.case("TC-H05 Cada equipo solo ve sus fechas y un jugador no puede quitarlas")
-def test_visibilidad(app, login_as):
+def test_tc_h05_visibilidad(app, login_as):
     login_as("player_mad")
     app.open_tab("Calendario")
     mad = blackout_row("QA · Sin partida MAD")
@@ -93,7 +93,7 @@ def test_visibilidad(app, login_as):
 
 
 @pytest.mark.case("TC-H06 Un admin quita las fechas de su equipo y no persisten al recargar")
-def test_quitar(app, login_as):
+def test_tc_h06_quitar(app, login_as):
     login_as("admin_mad")
     app.open_tab("Calendario")
     app.click(in_(blackout_row("QA · Sin partida MAD"), btn("Quitar")))
@@ -108,7 +108,7 @@ def test_quitar(app, login_as):
 
 
 @pytest.mark.case("TC-H07 Un día sin partida se avisa al seleccionarlo en el calendario")
-def test_aviso_en_el_dia(app, login_as):
+def test_tc_h07_aviso_en_el_dia(app, login_as):
     login_as("admin_foe")
     app.open_tab("Calendario")
     # Pulsar la fila lleva el calendario a ese mes y selecciona el primer día.

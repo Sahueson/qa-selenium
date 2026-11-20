@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.b_eventos;
 
 import static lab.qa.pages.AppPage.*;
 
@@ -54,7 +54,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-B01 Crear partida valida los campos obligatorios")
-  void crearValidaCampos() {
+  void tcB01_crearValidaCampos() {
     loginAs("admin_mad");
     app.click(NEW_EVENT_BUTTON);
     By submit = in(NEW_FORM, btn("Crear partida"));
@@ -77,7 +77,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-B01b Un admin crea una partida y aparece en la lista")
-  void crearPartida() {
+  void tcB01b_crearPartida() {
     loginAs("admin_mad");
     String title = "QA E2E · Partida creada " + System.currentTimeMillis();
     app.click(NEW_EVENT_BUTTON);
@@ -96,7 +96,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-B02 Cancelar una partida sin contar asistencia")
-  void cancelarSinAsistencia() {
+  void tcB02_cancelarSinAsistencia() {
     loginAs("admin_mad");
     app.openEvent("QA MAD · Partida próxima");
     app.click(modalButton("Cancelar partida"));
@@ -112,7 +112,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-B02b Cancelar una partida contando asistencia permite pasar lista")
-  void cancelarConAsistencia() {
+  void tcB02b_cancelarConAsistencia() {
     loginAs("admin_foe");
     app.openEvent("QA FOE · Partida próxima");
     app.click(modalButton("Cancelar partida"));
@@ -126,7 +126,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-B03 Cerrar el acta bloquea la partida en solo lectura")
-  void cerrarActa() {
+  void tcB03_cerrarActa() {
     loginAs("admin_foe");
     app.openEvent("QA FOE · Partida finalizada");
     app.click(modalButton("Guardar asistencia y bloquear partida"));
@@ -141,7 +141,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-B04 Un jugador no puede editar ni cancelar partidas ajenas")
-  void jugadorNoEdita() {
+  void tcB04_jugadorNoEdita() {
     loginAs("player_foe");
     app.openEvent("QA FOE · MilSim próxima");
     app.expectHidden(modalButton("Editar partida"));
@@ -151,7 +151,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-B05 Un admin edita una partida de su equipo")
-  void editar() {
+  void tcB05_editar() {
     loginAs("admin_mad");
     String title = "QA MAD · Partida editada " + System.currentTimeMillis();
     app.openTab("Partidas");
@@ -168,7 +168,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(8)
   @DisplayName("TC-B06 Reactivar una partida cancelada")
-  void reactivar() {
+  void tcB06_reactivar() {
     loginAs("admin_foe");
     app.openEvent("QA FOE · Partida cancelada");
     app.click(modalButton("Reactivar partida"));
@@ -181,7 +181,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(9)
   @DisplayName("TC-B07 Eliminar una partida pide confirmación y la borra del servidor")
-  void eliminar() {
+  void tcB07_eliminar() {
     loginAs("admin_mad");
     app.openTab("Partidas");
     String card = "QA MAD · Partida a eliminar";
@@ -203,7 +203,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(10)
   @DisplayName("TC-B08 Una partida cerrada no se puede editar ni eliminar desde la lista")
-  void cerradaSinBotones() {
+  void tcB08_cerradaSinBotones() {
     loginAs("admin_mad");
     app.openTab("Partidas");
     String card = "QA MAD · Partida cerrada";
@@ -215,7 +215,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(11)
   @DisplayName("TC-B09 Un jugador no puede pedir el desbloqueo de un acta")
-  void jugadorNoDesbloquea() {
+  void tcB09_jugadorNoDesbloquea() {
     loginAs("player_mad");
     app.openEvent("QA MAD · Partida cerrada");
     app.expectVisible(modalText(LOCKED));
@@ -225,7 +225,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(12)
   @DisplayName("TC-B10 Desbloquear un acta MAD: la pide su admin y la aprueba el super admin")
-  void desbloqueoMad() {
+  void tcB10_desbloqueoMad() {
     loginAs("admin_mad");
     app.openEvent("QA MAD · Partida cerrada");
     app.click(modalButton("Solicitar desbloqueo para editar"));
@@ -245,7 +245,7 @@ class EventosTest extends BaseTest {
   @Test
   @Order(13)
   @DisplayName("TC-B11 Desbloquear un acta FOE necesita a los otros dos responsables y se puede cancelar")
-  void desbloqueoFoe() {
+  void tcB11_desbloqueoFoe() {
     String title = "QA FOE · Partida pasada abierta";
     loginAs("admin_foe");
     app.openEvent(title);

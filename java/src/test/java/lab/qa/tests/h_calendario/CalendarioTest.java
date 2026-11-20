@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.h_calendario;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -56,7 +56,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-H01 Un admin marca fechas sin partida para su equipo")
-  void marcar() {
+  void tcH01_marcar() {
     loginAs("admin_mad");
     openForm();
     String reason = "QA E2E · Puente " + System.currentTimeMillis();
@@ -73,7 +73,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-H02 La fecha de fin no puede ser anterior a la de inicio")
-  void finAntesQueInicio() {
+  void tcH02_finAntesQueInicio() {
     loginAs("admin_mad");
     openForm();
     String reason = "QA E2E · Fechas al revés " + System.currentTimeMillis();
@@ -94,7 +94,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-H03 Un admin de un solo equipo no puede marcar fechas para ambos")
-  void adminUnEquipo() {
+  void tcH03_adminUnEquipo() {
     loginAs("admin_mad");
     openForm();
     assertEquals(List.of("MAD Irregulars"), app.optionTexts(By.xpath(FORM + "//select")));
@@ -103,7 +103,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-H04 El super admin puede marcar fechas para ambos equipos")
-  void superAmbos() {
+  void tcH04_superAmbos() {
     loginAs("superadmin");
     openForm();
     assertEquals(List.of("MAD Irregulars", "FOE", "Ambos equipos (MAD Irregulars y FOE)"),
@@ -116,7 +116,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-H05 Cada equipo solo ve sus fechas y un jugador no puede quitarlas")
-  void visibilidad() {
+  void tcH05_visibilidad() {
     loginAs("player_mad");
     app.openTab("Calendario");
     String mad = blackoutRow("QA · Sin partida MAD");
@@ -129,7 +129,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(6)
   @DisplayName("TC-H06 Un admin quita las fechas de su equipo y no persisten al recargar")
-  void quitar() {
+  void tcH06_quitar() {
     loginAs("admin_mad");
     app.openTab("Calendario");
     app.click(in(blackoutRow("QA · Sin partida MAD"), btn("Quitar")));
@@ -146,7 +146,7 @@ class CalendarioTest extends BaseTest {
   @Test
   @Order(7)
   @DisplayName("TC-H07 Un día sin partida se avisa al seleccionarlo en el calendario")
-  void avisoEnElDia() {
+  void tcH07_avisoEnElDia() {
     loginAs("admin_foe");
     app.openTab("Calendario");
     // Pulsar la fila lleva el calendario a ese mes y selecciona el primer día.

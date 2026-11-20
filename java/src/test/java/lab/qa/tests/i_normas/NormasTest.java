@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.i_normas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -84,7 +84,7 @@ class NormasTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-I01 Subir unos estatutos: se ven con enlace firmado y la URL pública no los sirve")
-  void subir() {
+  void tcI01_subir() {
     loginAs("admin_foe");
     String title = "QA E2E · Estatutos " + System.currentTimeMillis();
     uploadStatutes(title);
@@ -103,7 +103,7 @@ class NormasTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-I02 Eliminar un documento borra también el fichero")
-  void eliminar() {
+  void tcI02_eliminar() {
     loginAs("admin_foe");
     String title = "QA E2E · Estatutos a borrar " + System.currentTimeMillis();
     uploadStatutes(title);
@@ -134,7 +134,7 @@ class NormasTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-I03 El formulario exige título y solo acepta PDF")
-  void validacion() {
+  void tcI03_validacion() {
     loginAs("admin_foe");
     app.openTab("Normas");
     app.click(button("+ Subir PDF"));
@@ -151,7 +151,7 @@ class NormasTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-I04 Un jugador ve las normas de su equipo pero no puede subir ni borrar")
-  void jugadorVe() {
+  void tcI04_jugadorVe() {
     loginAs("admin_foe");
     String title = "QA E2E · Normas para jugadores " + System.currentTimeMillis();
     uploadStatutes(title);
@@ -166,7 +166,7 @@ class NormasTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-I05 Un jugador de otro equipo no ve las normas del FOE")
-  void otroEquipoNoVe() {
+  void tcI05_otroEquipoNoVe() {
     loginAs("admin_foe");
     String title = "QA E2E · Normas solo FOE " + System.currentTimeMillis();
     uploadStatutes(title);

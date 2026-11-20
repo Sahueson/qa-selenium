@@ -14,7 +14,7 @@ ADD_SQUAD_SELECT = "//select[option[normalize-space(.)='+ Añadir otro equipo']]
 
 
 @pytest.mark.case("TC-G01 El super admin asciende a un jugador a admin y este gestiona partidas")
-def test_ascender(app, login_as):
+def test_tc_g01_ascender(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
     Select(app.expect_visible(in_(player_card("QA Jugador MAD"), ROLE_SELECT))).select_by_value("admin")
@@ -28,7 +28,7 @@ def test_ascender(app, login_as):
 
 
 @pytest.mark.case("TC-G02 El super admin bloquea a un jugador y este pierde el acceso")
-def test_bloquear(app, login_as):
+def test_tc_g02_bloquear(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
     card = player_card("QA Jugador FOE")
@@ -43,7 +43,7 @@ def test_bloquear(app, login_as):
 
 
 @pytest.mark.case("TC-G03 Asignar equipo a un jugador sin equipo le da acceso a ese equipo")
-def test_asignar_equipo(app, login_as):
+def test_tc_g03_asignar_equipo(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
     card = player_card("QA Sin Equipo")
@@ -61,7 +61,7 @@ def test_asignar_equipo(app, login_as):
 
 
 @pytest.mark.case("TC-G04 Quitar la Junta Directiva a un miembro le oculta sus votaciones")
-def test_quitar_junta(app, login_as):
+def test_tc_g04_quitar_junta(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
     card = player_card("QA Junta 2")
@@ -76,7 +76,7 @@ def test_quitar_junta(app, login_as):
 
 
 @pytest.mark.case("TC-G05 Un admin que no es super admin no puede cambiar permisos")
-def test_admin_sin_permisos(app, login_as):
+def test_tc_g05_admin_sin_permisos(app, login_as):
     login_as("admin_foe")
     app.open_tab("Jugadores")
     card = player_card("QA Junta 2")
@@ -88,7 +88,7 @@ def test_admin_sin_permisos(app, login_as):
 
 
 @pytest.mark.case("TC-G06 El super admin no puede cambiarse el rol ni bloquearse a sí mismo")
-def test_super_no_se_toca(app, login_as):
+def test_tc_g06_super_no_se_toca(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
     card = player_card("QA Super Admin")
@@ -98,7 +98,7 @@ def test_super_no_se_toca(app, login_as):
 
 
 @pytest.mark.case("TC-G07 Un admin de equipo solo ve a los jugadores de su equipo")
-def test_admin_ve_su_equipo(app, login_as):
+def test_tc_g07_admin_ve_su_equipo(app, login_as):
     login_as("admin_mad")
     app.open_tab("Jugadores")
     app.expect_visible((By.XPATH, player_card("QA Jugador MAD")))

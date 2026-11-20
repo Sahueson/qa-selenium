@@ -1,4 +1,4 @@
-package lab.qa.tests;
+package lab.qa.tests.a_auth;
 
 import static lab.qa.pages.AppPage.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,7 +45,7 @@ class RbacTest extends BaseTest {
   @Test
   @Order(1)
   @DisplayName("TC-A06 Jugador MAD solo ve partidas MAD y no tiene pestaña FOE")
-  void jugadorMad() {
+  void tcA06_jugadorMad() {
     loginAs("player_mad");
     List<String> titles = app.visibleEventTitles();
     assertSees(titles, MAD);
@@ -56,7 +56,7 @@ class RbacTest extends BaseTest {
   @Test
   @Order(2)
   @DisplayName("TC-A07 Jugador FOE ve las partidas FOE y ninguna MAD")
-  void jugadorFoe() {
+  void tcA07_jugadorFoe() {
     loginAs("player_foe");
     List<String> titles = app.visibleEventTitles();
     assertSees(titles, FOE);
@@ -67,7 +67,7 @@ class RbacTest extends BaseTest {
   @Test
   @Order(3)
   @DisplayName("TC-A08 Super admin ve las partidas de ambos equipos")
-  void superAdmin() {
+  void tcA08_superAdmin() {
     loginAs("superadmin");
     assertSees(app.visibleEventTitles(), Stream.concat(MAD.stream(), FOE.stream()).toList());
   }
@@ -75,7 +75,7 @@ class RbacTest extends BaseTest {
   @Test
   @Order(4)
   @DisplayName("TC-A09 Jugador FOE sin cargo no ve la Junta Directiva")
-  void jugadorFoeSinJunta() {
+  void tcA09_jugadorFoeSinJunta() {
     loginAs("player_foe");
     app.openTab("FOE · Votos y Faltas");
     app.expectVisible(button("Faltas y Sanciones"));
@@ -86,7 +86,7 @@ class RbacTest extends BaseTest {
   @Test
   @Order(5)
   @DisplayName("TC-A10 Miembro de la Junta Directiva ve su votación")
-  void miembroJunta() {
+  void tcA10_miembroJunta() {
     loginAs("admin_foe");
     app.openTab("FOE · Votos y Faltas");
     app.click(button("Votos · Junta Directiva"));
