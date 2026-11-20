@@ -1,0 +1,82 @@
+name: run-tests-python
+
+# Selenium · Python (pytest) contra Tactical Calendar (staging). Lo lanza la web (workflow_dispatch).
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "ID del run en Supabase"
+        required: true
+      suite:
+        description: "Slug de la suite (ej. a-auth)"
+        required: true
+
+jobs:
+  test:
+    # ubuntu-latest ya trae Chrome; Selenium Manager descarga el chromedriver que corresponda.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: python
+    env:
+      RUN_ID: ${{ inputs.run_id }}
+      SUITE: ${{ inputs.suite }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      BASE_URL: ${{ secrets.TARGET_BASE_URL }}
+      # Reserva + reset del staging (with-staging.js) y login de los tests.
+      STG_URL: ${{ secrets.STG_URL }}
+      STG_SECRET_KEY: ${{ secrets.STG_SECRET_KEY }}
+      QA_PASSWORD: ${{ secrets.QA_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Sahueson/ivan-qa-lab-shared
+          path: shared
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Dependencias de shared (reserva y reset del staging)
+        run: npm ci --prefix ../shared
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: python/requirements.txt
+
+      - name: Dependencias de Python
+        run: pip install -r requirements.txt
+
+      - name: Marcar run como en curso
+        run: node ../shared/send-to-supabase.js start
+
+      # with-staging.js reserva el staging, lo resetea, ejecuta los tests y libera la reserva.
+      - name: Ejecutar tests
+        run: node ../shared/reset-staging/with-staging.js -- pytest "tests/$SUITE"
+        continue-on-error: true
+
+      - name: Enviar resultados
+        if: always()
+        run: node ../shared/publish-results.js result.json
+
+      # Solo capturas: nunca logs (podrían llevar la contraseña QA) en un repo público.
+      - name: Capturas de los tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-python-${{ inputs.suite }}
+          path: python/evidence/*.jpg
+          if-no-files-found: ignore
+          retention-days: 7
+
+      # Si algo falla antes de tener result.json, el run se cierra como 'failed' para no dejar
+      # bloqueado el índice one_active_run. Tras un 'finish' correcto no hace nada.
+      - name: Marcar run como fallido
+        if: failure() || cancelled()
+        run: node ../shared/send-to-supabase.js fail "El job de GitHub Actions falló o se canceló"

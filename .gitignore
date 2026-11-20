@@ -1,1 +1,12 @@
-node_modules
+# Código compartido (en CI se clona en ./shared; en local, enlace a ../ivan-qa-lab-shared)
+shared
+.env*
+# Java
+java/target/
+java/result.json
+# Python
+python/.venv/
+python/result.json
+python/evidence/
+__pycache__/
+.pytest_cache/
