@@ -16,13 +16,13 @@ public final class Browser {
   static final String NETWORK_COUNTER = """
       (() => {
         if (window.__qa) return;
-        const qa = window.__qa = { inflight: 0, last: Date.now() };
+        const qa = window.__qa = { inflight: 0, total: 0, last: Date.now() };
         const isApi = (u) => /\\/(rest|auth|storage)\\/v1\\//.test(String(u));
         const original = window.fetch;
         window.fetch = function (input, init) {
           const url = typeof input === "string" ? input : input && input.url;
           if (!isApi(url)) return original.apply(this, arguments);
-          qa.inflight++; qa.last = Date.now();
+          qa.inflight++; qa.total++; qa.last = Date.now();
           return original.apply(this, arguments).finally(() => { qa.inflight--; qa.last = Date.now(); });
         };
       })();

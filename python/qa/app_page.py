@@ -38,9 +38,17 @@ def heading(text: str) -> Locator:
                       f"[normalize-space(.)={xpath_literal(text)}]")
 
 
+def contains_text_xpath(t: str) -> str:
+    """XPath relativo del elemento MÁS INTERNO cuyo texto completo contiene `t` (como getByText
+    de Playwright). No vale text()[contains(...)]: React parte textos con variables en varios
+    nodos ("…(iniciada por", " ", "QA Admin MAD", ")")."""
+    lit = xpath_literal(t)
+    return f"//*[contains(normalize-space(.),{lit})][not(*[contains(normalize-space(.),{lit})])]"
+
+
 def text(t: str) -> Locator:
-    """Cualquier elemento cuyo texto propio contiene `t`."""
-    return By.XPATH, f"//*[text()[contains(normalize-space(.),{xpath_literal(t)})]]"
+    """Cualquier elemento cuyo texto contiene `t`."""
+    return By.XPATH, contains_text_xpath(t)
 
 
 def nav_tab(label: str) -> Locator:
@@ -53,6 +61,27 @@ NEW_EVENT_BUTTON: Locator = button("+ Nueva partida")
 LOGOUT_BUTTON: Locator = (By.XPATH, "//*[contains(@class,'app-header')]//button[normalize-space(.)='Salir']")
 PROFILE_BUTTON: Locator = (By.CSS_SELECTOR, "[title='Editar mi ficha de operador']")
 EVENT_CARD: Locator = (By.CSS_SELECTOR, "article.event-card")
+MODAL = "//*[contains(concat(' ',@class,' '),' modal ')]"
+
+
+def modal_with_heading(title: str) -> str:
+    """XPath del modal abierto que contiene un encabezado con ese texto (para componer)."""
+    return f"{MODAL}[.//*[self::h1 or self::h2 or self::h3][normalize-space(.)={xpath_literal(title)}]]"
+
+
+def event_card(title: str) -> str:
+    """XPath de la tarjeta de partida (article.event-card) que contiene ese título."""
+    return f"//article[contains(@class,'event-card')][.//*[contains(normalize-space(.),{xpath_literal(title)})]]"
+
+
+def in_(container_xpath: str, inner_xpath: str) -> Locator:
+    """Localizador dentro de un contenedor: in_(MODAL, "//button[...]")."""
+    return By.XPATH, container_xpath + inner_xpath
+
+
+def btn(text: str) -> str:
+    """XPath relativo de un botón con ese texto exacto (para componer con in_)."""
+    return f"//button[normalize-space(.)={xpath_literal(text)}]"
 
 
 class AppPage:
@@ -122,6 +151,38 @@ class AppPage:
                 raise AssertionError(f"La app no dejó de hacer peticiones en {timeout_ms} ms")
             time.sleep(0.1)
 
+    def requests_started(self) -> int:
+        """Peticiones a Supabase lanzadas desde que cargó la página (contador de browser.py)."""
+        return self.driver.execute_script("return window.__qa ? window.__qa.total : 0;")
+
+    def wait_for_request_after(self, before: int, timeout_s: float = 15) -> None:
+        """Espera a que se lance al menos una petición nueva desde `before`."""
+        try:
+            WebDriverWait(self.driver, timeout_s, 0.1).until(lambda d: self.requests_started() > before)
+        except Exception:
+            raise AssertionError("La app no lanzó la petición esperada") from None
+
+    def set_value(self, locator: Locator, value: str) -> None:
+        """Escribe en un input como lo haría el usuario, también en <input type=date/time>
+        (send_keys en un date depende del formato del idioma del navegador). Usa el setter nativo
+        y dispara input/change para que React se entere (equivale a fill() de Playwright)."""
+        el = self.expect_visible(locator)
+        self.driver.execute_script("""
+            const [el, v] = arguments;
+            const proto = el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+            Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        """, el, value)
+
+    def expect_text(self, locator: Locator, t: str) -> None:
+        """El elemento tiene exactamente ese texto (sin espacios sobrantes)."""
+        try:
+            WebDriverWait(self.driver, TIMEOUT, 0.2).until(
+                lambda d: (d.find_element(*locator).get_attribute("textContent") or "").strip() == t)
+        except Exception:
+            raise AssertionError(f"{locator[1]} no dice «{t}»") from None
+
     # ---------- Login QA ----------
 
     def open(self) -> None:
@@ -140,6 +201,16 @@ class AppPage:
 
     def open_tab(self, label: str) -> None:
         self.click(nav_tab(label))
+
+    def open_event(self, title: str) -> None:
+        """Abre el detalle de una partida. El modal recarga los datos al abrirse (loadCloudData):
+        se espera a la petición lanzada tras el clic y a que la red quede en reposo."""
+        self.open_tab("Partidas")
+        before = self.requests_started()
+        self.click((By.XPATH, event_card(title) + "//button[contains(@class,'tactical-btn--blue')]"))
+        self.expect_visible((By.XPATH, modal_with_heading("Detalle de partida")))
+        self.wait_for_request_after(before)
+        self.wait_for_quiet_network()
 
     def visible_event_titles(self) -> list[str]:
         """Títulos de las partidas que el usuario ve en la pestaña Partidas."""

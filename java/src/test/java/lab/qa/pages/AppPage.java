@@ -51,9 +51,19 @@ public class AppPage {
     return By.xpath("//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space(.)=" + xpathLiteral(text) + "]");
   }
 
-  /** Cualquier elemento cuyo texto propio contiene `text`. */
+  /**
+   * XPath relativo del elemento MÁS INTERNO cuyo texto completo contiene `text` (como getByText de
+   * Playwright). No vale text()[contains(...)]: React parte textos con variables en varios nodos
+   * ("…(iniciada por", " ", "QA Admin MAD", ")").
+   */
+  public static String containsTextXpath(String text) {
+    String lit = xpathLiteral(text);
+    return "//*[contains(normalize-space(.)," + lit + ")][not(*[contains(normalize-space(.)," + lit + ")])]";
+  }
+
+  /** Cualquier elemento cuyo texto contiene `text`. */
   public static By text(String text) {
-    return By.xpath("//*[text()[contains(normalize-space(.)," + xpathLiteral(text) + ")]]");
+    return By.xpath(containsTextXpath(text));
   }
 
   public static By navTab(String label) {

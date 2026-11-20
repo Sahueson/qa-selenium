@@ -6,6 +6,8 @@ from qa.app_page import (EVENT_CARD, LOGIN_BUTTON, LOGOUT_BUTTON, NAV, NEW_EVENT
                          PROFILE_BUTTON, heading, nav_tab)
 from qa.users import qa_user
 
+pytestmark = pytest.mark.usefixtures("reset_staging")  # la suite parte del seed
+
 FICHA = ("//*[contains(concat(' ',@class,' '),' modal ')]"
          "[.//*[self::h1 or self::h2 or self::h3][normalize-space(.)='Tu ficha de operador']]")
 

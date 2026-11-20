@@ -4,6 +4,7 @@ import static lab.qa.pages.AppPage.*;
 
 import lab.qa.support.BaseTest;
 import lab.qa.support.QaUsers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -20,6 +21,12 @@ class AuthTest extends BaseTest {
 
   private static final String FICHA = "//*[contains(concat(' ',@class,' '),' modal ')]"
       + "[.//*[self::h1 or self::h2 or self::h3][normalize-space(.)='Tu ficha de operador']]";
+
+  // La suite parte del seed aunque antes se hayan ejecutado otras.
+  @BeforeAll
+  static void seed() {
+    resetStaging();
+  }
 
   private static By fichaButton(String prefix) {
     return By.xpath(FICHA + "//button[starts-with(normalize-space(.),'" + prefix + "')]");
