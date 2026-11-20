@@ -95,6 +95,45 @@ public class AppPage {
     return "//button[normalize-space(.)=" + xpathLiteral(text) + "]";
   }
 
+  private static final String CARD = "contains(concat(' ',@class,' '),' tactical-card ')";
+
+  /**
+   * XPath de la ficha de un jugador (pestaña Jugadores). El título lleva " [BLOQUEADO]" si está
+   * bloqueado o " (Tú)" si es el usuario con sesión.
+   */
+  public static String playerCard(String nickname) {
+    String names = "normalize-space(.)=" + xpathLiteral(nickname)
+        + " or normalize-space(.)=" + xpathLiteral(nickname + " [BLOQUEADO]")
+        + " or normalize-space(.)=" + xpathLiteral(nickname + " (Tú)");
+    return "//*[" + CARD + "][.//*[self::h2 or self::h3 or self::h4][" + names + "]][not(.//*[" + CARD + "])]";
+  }
+
+  /** Bloque de asistencia de la ficha: "Asistencia 2026 · 60% (1,5/2,5)" + "Cumple mínimo...". */
+  public static By attendanceOf(String nickname) {
+    return By.xpath(playerCard(nickname)
+        + "//*[contains(@class,'roster-card__label')][starts-with(normalize-space(.),'Asistencia ')]/..");
+  }
+
+  /** XPath de la tarjeta de una votación por (parte de) su título. */
+  public static String pollCard(String title) {
+    return "//*[" + CARD + "][.//*[self::h2 or self::h3 or self::h4][contains(normalize-space(.)," + xpathLiteral(title)
+        + ")]][not(.//*[" + CARD + "])]";
+  }
+
+  /** XPath de la fila de excedencias por su motivo: fila > info > motivo. */
+  public static String leaveRow(String reason) {
+    return "//*[text()[normalize-space(.)=" + xpathLiteral(reason) + "]]/../..";
+  }
+
+  /** XPath relativo de un botón cuyo texto contiene `text`. */
+  public static String btnContaining(String text) {
+    return "//button[contains(normalize-space(.)," + xpathLiteral(text) + ")]";
+  }
+
+  /** Formulario de inscripción del detalle de partida: equipación y rol. */
+  public static final By REGISTRATION_GEAR = By.xpath("(" + MODAL + "//*[contains(@class,'inscribir-form')]//select)[1]");
+  public static final By REGISTRATION_ROLE = By.xpath("(" + MODAL + "//*[contains(@class,'inscribir-form')]//select)[2]");
+
   /** Localizador dentro de un contenedor: in(MODAL, btn("Guardar")). */
   public static By in(String containerXpath, String innerXpath) {
     return By.xpath(containerXpath + innerXpath);
@@ -229,6 +268,56 @@ public class AppPage {
           String content = d.findElement(locator).getDomProperty("textContent");
           return content != null && content.strip().equals(text);
         });
+  }
+
+  /** El input/select tiene ese valor (como toHaveValue de Playwright). */
+  public void expectValue(By locator, String value) {
+    new WebDriverWait(driver, TIMEOUT)
+        .withMessage(locator + " no vale «" + value + "»")
+        .ignoring(org.openqa.selenium.NoSuchElementException.class)
+        .until(d -> value.equals(d.findElement(locator).getDomProperty("value")));
+  }
+
+  public void expectEnabled(By locator, boolean enabled) {
+    new WebDriverWait(driver, TIMEOUT)
+        .withMessage(locator + " no está " + (enabled ? "habilitado" : "deshabilitado"))
+        .ignoring(org.openqa.selenium.NoSuchElementException.class)
+        .until(d -> d.findElement(locator).isEnabled() == enabled);
+  }
+
+  public void expectChecked(By locator, boolean checked) {
+    new WebDriverWait(driver, TIMEOUT)
+        .withMessage(locator + " no está " + (checked ? "marcado" : "desmarcado"))
+        .ignoring(org.openqa.selenium.NoSuchElementException.class)
+        .until(d -> d.findElement(locator).isSelected() == checked);
+  }
+
+  /** Elige una opción de un select por su value. */
+  public void selectByValue(By locator, String value) {
+    new org.openqa.selenium.support.ui.Select(expectVisible(locator)).selectByValue(value);
+  }
+
+  public void selectByText(By locator, String text) {
+    new org.openqa.selenium.support.ui.Select(expectVisible(locator)).selectByVisibleText(text);
+  }
+
+  public List<String> optionTexts(By locator) {
+    return new org.openqa.selenium.support.ui.Select(expectVisible(locator)).getOptions().stream()
+        .map(WebElement::getText).toList();
+  }
+
+  public Object js(String script, Object... args) {
+    return ((JavascriptExecutor) driver).executeScript(script, args);
+  }
+
+  public void openLeavesPanel() {
+    openTab("Jugadores");
+    click(By.xpath("//button[starts-with(normalize-space(.),'Excedencias FOE')]"));
+  }
+
+  public void openFoeSection(String label) {
+    openTab("FOE · Votos y Faltas");
+    click(button(label));
   }
 
   // ---------- Login QA ----------
