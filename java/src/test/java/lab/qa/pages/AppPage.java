@@ -76,6 +76,30 @@ public class AppPage {
         + xpathLiteral(title) + "]]");
   }
 
+  // ---------- Piezas XPath para componer (contenedor + elemento) ----------
+
+  public static final String MODAL = "//*[contains(concat(' ',@class,' '),' modal ')]";
+
+  /** XPath del modal abierto que contiene un encabezado con ese texto. */
+  public static String modalXpath(String title) {
+    return MODAL + "[.//*[self::h1 or self::h2 or self::h3][normalize-space(.)=" + xpathLiteral(title) + "]]";
+  }
+
+  /** XPath de la tarjeta de partida (article.event-card) que contiene ese título. */
+  public static String eventCard(String title) {
+    return "//article[contains(@class,'event-card')][.//*[contains(normalize-space(.)," + xpathLiteral(title) + ")]]";
+  }
+
+  /** XPath relativo de un botón con ese texto exacto. */
+  public static String btn(String text) {
+    return "//button[normalize-space(.)=" + xpathLiteral(text) + "]";
+  }
+
+  /** Localizador dentro de un contenedor: in(MODAL, btn("Guardar")). */
+  public static By in(String containerXpath, String innerXpath) {
+    return By.xpath(containerXpath + innerXpath);
+  }
+
   /** Comillas seguras en XPath 1.0 (los textos de la app llevan comillas y apóstrofos). */
   static String xpathLiteral(String s) {
     if (!s.contains("'")) return "'" + s + "'";
@@ -167,6 +191,46 @@ public class AppPage {
     }
   }
 
+  /** Peticiones a Supabase lanzadas desde que cargó la página (contador de Browser). */
+  public long requestsStarted() {
+    Object n = ((JavascriptExecutor) driver).executeScript("return window.__qa ? window.__qa.total : 0;");
+    return ((Number) n).longValue();
+  }
+
+  /** Espera a que se lance al menos una petición nueva desde `before`. */
+  public void waitForRequestAfter(long before) {
+    new WebDriverWait(driver, Duration.ofSeconds(15))
+        .withMessage("La app no lanzó la petición esperada")
+        .until(d -> requestsStarted() > before);
+  }
+
+  /**
+   * Escribe en un input como lo haría el usuario, también en input type=date/time (sendKeys en un
+   * date depende del formato del idioma del navegador). Usa el setter nativo y dispara
+   * input/change para que React se entere (equivale a fill() de Playwright).
+   */
+  public void setValue(By locator, String value) {
+    WebElement el = expectVisible(locator);
+    ((JavascriptExecutor) driver).executeScript("""
+        const [el, v] = arguments;
+        const proto = el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+        Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        """, el, value);
+  }
+
+  /** El elemento tiene exactamente ese texto (sin espacios sobrantes). */
+  public void expectText(By locator, String text) {
+    new WebDriverWait(driver, TIMEOUT)
+        .withMessage(locator + " no dice «" + text + "»")
+        .ignoring(org.openqa.selenium.NoSuchElementException.class)
+        .until(d -> {
+          String content = d.findElement(locator).getDomProperty("textContent");
+          return content != null && content.strip().equals(text);
+        });
+  }
+
   // ---------- Login QA ----------
 
   public void open() {
@@ -187,6 +251,19 @@ public class AppPage {
 
   public void openTab(String label) {
     click(navTab(label));
+  }
+
+  /**
+   * Abre el detalle de una partida. El modal recarga los datos al abrirse (loadCloudData): se
+   * espera a la petición lanzada tras el clic y a que la red quede en reposo.
+   */
+  public void openEvent(String title) {
+    openTab("Partidas");
+    long before = requestsStarted();
+    click(By.xpath(eventCard(title) + "//button[contains(@class,'tactical-btn--blue')]"));
+    expectVisible(By.xpath(modalXpath("Detalle de partida")));
+    waitForRequestAfter(before);
+    waitForQuietNetwork();
   }
 
   /** Títulos de las partidas que el usuario ve en la pestaña Partidas. */

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.stream.Stream;
 import lab.qa.support.BaseTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -27,6 +28,13 @@ class RbacTest extends BaseTest {
       "QA FOE · Partida próxima", "QA FOE · MilSim próxima", "QA FOE · Partida en menos de 48 h",
       "QA FOE · Partida finalizada", "QA FOE · Inscripción abierta");
   private static final String VOTACION_DIRECTIVA = "QA · Votación de la Junta Directiva";
+
+  // Las clases van por orden alfabético (AuthTest, EventosTest, RbacTest...): si se ejecutan
+  // varias suites juntas, esta no debe ver lo que haya creado la B.
+  @BeforeAll
+  static void seed() {
+    resetStaging();
+  }
 
   private static void assertSees(List<String> titles, List<String> expected) {
     for (String t : expected) {

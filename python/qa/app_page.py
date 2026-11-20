@@ -183,6 +183,14 @@ class AppPage:
         except Exception:
             raise AssertionError(f"{locator[1]} no dice «{t}»") from None
 
+    def expect_value(self, locator: Locator, value: str) -> None:
+        """El input/select tiene ese valor (como toHaveValue de Playwright)."""
+        try:
+            WebDriverWait(self.driver, TIMEOUT, 0.2).until(
+                lambda d: d.find_element(*locator).get_property("value") == value)
+        except Exception:
+            raise AssertionError(f"{locator[1]} no vale «{value}»") from None
+
     # ---------- Login QA ----------
 
     def open(self) -> None:
@@ -211,6 +219,10 @@ class AppPage:
         self.expect_visible((By.XPATH, modal_with_heading("Detalle de partida")))
         self.wait_for_request_after(before)
         self.wait_for_quiet_network()
+
+    # Formulario de inscripción del detalle de partida: equipación y rol.
+    REGISTRATION_GEAR: Locator = (By.XPATH, f"({MODAL}//*[contains(@class,'inscribir-form')]//select)[1]")
+    REGISTRATION_ROLE: Locator = (By.XPATH, f"({MODAL}//*[contains(@class,'inscribir-form')]//select)[2]")
 
     def visible_event_titles(self) -> list[str]:
         """Títulos de las partidas que el usuario ve en la pestaña Partidas."""
