@@ -74,6 +74,38 @@ def event_card(title: str) -> str:
     return f"//article[contains(@class,'event-card')][.//*[contains(normalize-space(.),{xpath_literal(title)})]]"
 
 
+CARD = "contains(concat(' ',@class,' '),' tactical-card ')"
+
+
+def player_card(nickname: str) -> str:
+    """XPath de la ficha de un jugador (pestaña Jugadores). El título lleva " [BLOQUEADO]" si
+    está bloqueado o " (Tú)" si es el usuario con sesión."""
+    names = " or ".join(f"normalize-space(.)={xpath_literal(nickname + suf)}" for suf in ("", " [BLOQUEADO]", " (Tú)"))
+    return f"//*[{CARD}][.//*[self::h2 or self::h3 or self::h4][{names}]][not(.//*[{CARD}])]"
+
+
+def attendance_of(nickname: str) -> Locator:
+    """Bloque de asistencia de la ficha: "Asistencia 2026 · 60% (1,5/2,5)" + "Cumple mínimo..."."""
+    return By.XPATH, (player_card(nickname) + "//*[contains(@class,'roster-card__label')]"
+                      "[starts-with(normalize-space(.),'Asistencia ')]/..")
+
+
+def poll_card(title: str) -> str:
+    """XPath de la tarjeta de una votación por (parte de) su título."""
+    return (f"//*[{CARD}][.//*[self::h2 or self::h3 or self::h4][contains(normalize-space(.),{xpath_literal(title)})]]"
+            f"[not(.//*[{CARD}])]")
+
+
+def leave_row(reason: str) -> str:
+    """XPath de la fila de excedencias por su motivo: <fila><info><motivo/></info><botones/></fila>."""
+    return f"//*[text()[normalize-space(.)={xpath_literal(reason)}]]/../.."
+
+
+def btn_containing(t: str) -> str:
+    """XPath relativo de un botón cuyo texto contiene `t`."""
+    return f"//button[contains(normalize-space(.),{xpath_literal(t)})]"
+
+
 def in_(container_xpath: str, inner_xpath: str) -> Locator:
     """Localizador dentro de un contenedor: in_(MODAL, "//button[...]")."""
     return By.XPATH, container_xpath + inner_xpath
@@ -190,6 +222,26 @@ class AppPage:
                 lambda d: d.find_element(*locator).get_property("value") == value)
         except Exception:
             raise AssertionError(f"{locator[1]} no vale «{value}»") from None
+
+    def expect_enabled(self, locator: Locator, enabled: bool = True) -> None:
+        try:
+            WebDriverWait(self.driver, TIMEOUT, 0.2).until(lambda d: d.find_element(*locator).is_enabled() == enabled)
+        except Exception:
+            raise AssertionError(f"{locator[1]} no está {'habilitado' if enabled else 'deshabilitado'}") from None
+
+    def expect_checked(self, locator: Locator, checked: bool = True) -> None:
+        try:
+            WebDriverWait(self.driver, TIMEOUT, 0.2).until(lambda d: d.find_element(*locator).is_selected() == checked)
+        except Exception:
+            raise AssertionError(f"{locator[1]} no está {'marcado' if checked else 'desmarcado'}") from None
+
+    def open_leaves_panel(self) -> None:
+        self.open_tab("Jugadores")
+        self.click((By.XPATH, "//button[starts-with(normalize-space(.),'Excedencias FOE')]"))
+
+    def open_foe_section(self, label: str) -> None:
+        self.open_tab("FOE · Votos y Faltas")
+        self.click(button(label))
 
     # ---------- Login QA ----------
 
