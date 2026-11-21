@@ -7,7 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 suites=$(printf %s "${SUITE:?Falta SUITE}" | tr -cd 'a-z0-9,-')
 grep=$(printf %s "${GREP:-}" | tr -cd 'A-Za-z0-9_|')
-args=()
+args=(--html=report/index.html --self-contained-html)  # informe HTML nativo (pytest-html)
 IFS=',' read -ra list <<< "$suites"
 for s in "${list[@]}"; do [ -n "$s" ] && args+=("tests/$s"); done
 [ -n "$grep" ] && args+=(-k "${grep//|/ or }")
