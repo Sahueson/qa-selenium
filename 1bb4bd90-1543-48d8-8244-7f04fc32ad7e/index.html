@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informe de Selenium Java</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f5f1;--card:#fff;--line:#e3e1da;--txt:#171717;--mut:#6b6b66}
+@media(prefers-color-scheme:dark){:root{--bg:#121212;--card:#1c1c1c;--line:#2e2e2e;--txt:#ececec;--mut:#9a9a94}}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,sans-serif}main{max-width:1000px;margin:0 auto;padding:32px 20px}
+h1{margin:0 0 4px;font-size:28px}p.sub{margin:0 0 24px;color:var(--mut)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.kpi b{display:block;font-size:28px}.kpi span{color:var(--mut);font-size:12px}
+.kpi.hero{background:#111;color:#fff}.kpi.hero span{color:#bbb}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}tr:first-child td{border-top:0}td.num{text-align:right;white-space:nowrap;color:var(--mut)}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.tag.passed{background:#10b98122;color:#059669}.tag.failed{background:#ef444422;color:#dc2626}.tag.skipped{background:#f59e0b22;color:#d97706}
+small{color:var(--mut)}details{margin-top:6px}summary{cursor:pointer;color:var(--mut);font-size:13px}
+pre{background:#0d0d0d;color:#d6d6d6;padding:12px;border-radius:12px;overflow:auto;font-size:12px;white-space:pre-wrap;word-break:break-word}pre.err{color:#fca5a5}
+img{max-width:100%;border:1px solid var(--line);border-radius:12px;margin-top:6px}footer{margin-top:24px;color:var(--mut);font-size:12px}
+</style></head><body><main>
+<h1>Informe de Selenium Java</h1>
+<p class="sub">Suite <strong>j-demo-fallos</strong> · tactical-calendar · 22/11/2026, 0:14:08 · 78.1 s</p>
+<section class="kpis">
+<div class="kpi hero"><b>0%</b><span>Tasa de éxito (0 de 7)</span></div>
+<div class="kpi"><b>0</b><span>Pasan</span></div>
+<div class="kpi"><b>7</b><span>Fallan</span></div>
+<div class="kpi"><b>0</b><span>Omitidos</span></div>
+</section>
+<table><tbody>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J01 El jugador MAD ve las partidas del equipo FOE (requisito inexistente)</strong><br><small>QA Jugador MAD</small><details><summary>Captura</summary><img src="img/tc-j01-el-jugador-mad-ve-las-partidas-del-equipo-foe-requisito-inexistente.jpg" alt="Captura de TC-J01 El jugador MAD ve las partidas del equipo FOE (requisito inexistente)" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //*[contains(normalize-space(.),'QA FOE · Partida próxima')][not(*[contains(normalize-space(.),'QA FOE · Partida próxima')])]</pre></td>
+<td class="num">14.0 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J02 El jugador FOE ve las partidas del equipo MAD (requisito inexistente)</strong><br><small>QA Jugador FOE</small><details><summary>Captura</summary><img src="img/tc-j02-el-jugador-foe-ve-las-partidas-del-equipo-mad-requisito-inexistente.jpg" alt="Captura de TC-J02 El jugador FOE ve las partidas del equipo MAD (requisito inexistente)" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //*[contains(normalize-space(.),'QA MAD · Partida próxima')][not(*[contains(normalize-space(.),'QA MAD · Partida próxima')])]</pre></td>
+<td class="num">12.4 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J03 El super admin dispone de un panel de métricas</strong><br><small>QA Super Admin</small><details><summary>Captura</summary><img src="img/tc-j03-el-super-admin-dispone-de-un-panel-de-metricas.jpg" alt="Captura de TC-J03 El super admin dispone de un panel de métricas" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space(.)='Panel de métricas']</pre></td>
+<td class="num">12.3 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J04 El jugador sin equipo puede crear partidas</strong><br><small>QA Sin Equipo</small><details><summary>Captura</summary><img src="img/tc-j04-el-jugador-sin-equipo-puede-crear-partidas.jpg" alt="Captura de TC-J04 El jugador sin equipo puede crear partidas" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //button[normalize-space(.)='Crear partida']</pre></td>
+<td class="num">12.4 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J05 El jugador bloqueado sigue viendo el calendario de su equipo</strong><br><small>QA Bloqueado</small><details><summary>Captura</summary><img src="img/tc-j05-el-jugador-bloqueado-sigue-viendo-el-calendario-de-su-equipo.jpg" alt="Captura de TC-J05 El jugador bloqueado sigue viendo el calendario de su equipo" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //*[contains(normalize-space(.),'QA MAD · Partida próxima')][not(*[contains(normalize-space(.),'QA MAD · Partida próxima')])]</pre></td>
+<td class="num">12.3 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J06 El admin MAD tiene una pestaña de Facturación</strong><br><small>QA Admin MAD</small><details><summary>Captura</summary><img src="img/tc-j06-el-admin-mad-tiene-una-pestana-de-facturacion.jpg" alt="Captura de TC-J06 El admin MAD tiene una pestaña de Facturación" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //button[normalize-space(.)='Facturación']</pre></td>
+<td class="num">12.9 s</td></tr>
+<tr class="failed"><td><span class="tag failed">Falla</span></td>
+<td><strong>TC-J07 El jugador MAD puede exportar el calendario a PDF</strong><br><small>QA Jugador MAD</small><details><summary>Captura</summary><img src="img/tc-j07-el-jugador-mad-puede-exportar-el-calendario-a-pdf.jpg" alt="Captura de TC-J07 El jugador MAD puede exportar el calendario a PDF" loading="lazy"></details><pre class="err">Expected condition failed: No se ve By.xpath: //button[normalize-space(.)='Exportar calendario (PDF)']</pre></td>
+<td class="num">12.8 s</td></tr>
+</tbody></table>
+<footer>Generado por Ivan QA Lab. Sin claves, tokens, contraseñas, emails ni ids de usuario.</footer>
+</main></body></html>
