@@ -17,6 +17,8 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: write   # publica el informe en la rama gh-pages
     # ubuntu-latest ya trae Chrome; Selenium Manager descarga el chromedriver que corresponda.
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -82,6 +84,24 @@ jobs:
 
       # Si algo falla antes de tener result.json, el run se cierra como 'failed' para no dejar
       # bloqueado el índice one_active_run. Tras un 'finish' correcto no hace nada.
+      # Informe HTML de la ejecución (público en GitHub Pages: sin claves, tokens, contraseñas, emails ni ids de usuario).
+      - name: Informe HTML
+        if: always()
+        continue-on-error: true
+        run: node ../shared/make-report.js result.json report "Informe de Selenium Python"
+
+      - name: Publicar informe (GitHub Pages)
+        if: always() && hashFiles('python/report/index.html') != ''
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: python/report
+          destination_dir: ${{ inputs.run_id }}
+          keep_files: true
+          user_name: qa-lab-bot
+          user_email: qa-lab-bot@users.noreply.github.com
+
       - name: Marcar run como fallido
         if: failure() || cancelled()
         run: node ../shared/send-to-supabase.js fail "El job de GitHub Actions falló o se canceló"
