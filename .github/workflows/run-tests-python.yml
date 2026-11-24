@@ -89,6 +89,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
+          # Allure (pasos + capturas). Si no hay resultados de Allure, make-report.js genera el informe sencillo.
+          if [ -d allure-results ]; then
+            npx --yes allure@3 generate allure-results -o report --name "Informe de Selenium Python" || rm -rf report
+          fi
           node ../shared/make-report.js result.json report "Informe de Selenium Python"
           node ../shared/mask-report.js report
 

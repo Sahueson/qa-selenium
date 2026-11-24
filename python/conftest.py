@@ -10,6 +10,7 @@ import subprocess
 import unicodedata
 from pathlib import Path
 
+import allure
 import pytest
 from PIL import Image
 
@@ -38,6 +39,12 @@ def first_line(excinfo) -> str:
     return line.replace(pwd, "***") if pwd else line
 
 
+@pytest.fixture(autouse=True)
+def _allure_title(request):
+    """Nombre del caso en el informe de Allure (el mismo que en la web)."""
+    allure.dynamic.title(case_name(request.node))
+
+
 @pytest.fixture
 def driver(request):
     drv = browser.start()
@@ -47,6 +54,7 @@ def driver(request):
         EVIDENCE_DIR.mkdir(exist_ok=True)
         path = EVIDENCE_DIR / f"{slug(case_name(request.node))}.jpg"
         Image.open(io.BytesIO(drv.get_screenshot_as_png())).convert("RGB").save(path, "JPEG", quality=60)
+        allure.attach.file(str(path), name="Captura final", attachment_type=allure.attachment_type.JPG)
         request.node.qa_evidence = str(path)
     except Exception as e:  # noqa: BLE001
         print(f"[qa-lab] Sin captura para {case_name(request.node)}: {e}")

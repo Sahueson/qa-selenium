@@ -5,6 +5,7 @@ como lo haría un usuario. Las esperas son explícitas: 10 s, como el expect de 
 """
 import time
 
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -157,10 +158,12 @@ class AppPage:
         except Exception:
             raise AssertionError("La página no tiene título") from None
 
+    @allure.step("Aviso «{t}»")
     def expect_toast(self, t: str) -> None:
         """Toast (.tactical-toast) que contiene el texto."""
         self.expect_visible((By.XPATH, f"//*[contains(@class,'tactical-toast')][contains(normalize-space(.),{xpath_literal(t)})]"))
 
+    @allure.step("Pulsar {locator[1]}")
     def click(self, locator: Locator) -> None:
         try:
             el = WebDriverWait(self.driver, TIMEOUT, 0.2).until(EC.element_to_be_clickable(locator))
@@ -226,6 +229,7 @@ class AppPage:
     # ----- Desplegables propios (TacticalSelect): la lista solo existe con el menú abierto -----
     LISTBOX_OPTIONS = "//ul[@role='listbox']//li[@role='option']"
 
+    @allure.step("Elegir «{option}» en el desplegable")
     def choose_option(self, trigger: Locator, option: str) -> None:
         """Abre el desplegable y elige la opción por su texto."""
         self.click(trigger)
@@ -261,9 +265,11 @@ class AppPage:
 
     # ---------- Login QA ----------
 
+    @allure.step("Abrir la app")
     def open(self) -> None:
         self.driver.get(base_url() + "/")
 
+    @allure.step("Iniciar sesión con el usuario QA")
     def login(self, email: str, password: str) -> None:
         email_input = self.expect_visible((By.CSS_SELECTOR, "[data-testid='qa-email-input']"))
         email_input.clear()
@@ -275,9 +281,11 @@ class AppPage:
 
     # ---------- Navegación y partidas ----------
 
+    @allure.step("Ir a la pestaña «{label}»")
     def open_tab(self, label: str) -> None:
         self.click(nav_tab(label))
 
+    @allure.step("Abrir la partida «{title}»")
     def open_event(self, title: str) -> None:
         """Abre el detalle de una partida. El modal recarga los datos al abrirse (loadCloudData):
         se espera a la petición lanzada tras el clic y a que la red quede en reposo."""
