@@ -131,8 +131,8 @@ public class AppPage {
   }
 
   /** Formulario de inscripción del detalle de partida: equipación y rol. */
-  public static final By REGISTRATION_GEAR = By.xpath("(" + MODAL + "//*[contains(@class,'inscribir-form')]//select)[1]");
-  public static final By REGISTRATION_ROLE = By.xpath("(" + MODAL + "//*[contains(@class,'inscribir-form')]//select)[2]");
+  public static final By REGISTRATION_GEAR = By.xpath(MODAL + "//*[@data-testid='event-register-team-select']");
+  public static final By REGISTRATION_ROLE = By.xpath(MODAL + "//*[@data-testid='event-register-role-select']");
 
   /** Localizador dentro de un contenedor: in(MODAL, btn("Guardar")). */
   public static By in(String containerXpath, String innerXpath) {
@@ -299,6 +299,25 @@ public class AppPage {
 
   public void selectByText(By locator, String text) {
     new org.openqa.selenium.support.ui.Select(expectVisible(locator)).selectByVisibleText(text);
+  }
+
+  // ----- Desplegables propios (TacticalSelect): la lista solo existe con el menú abierto -----
+  private static final String LISTBOX_OPTIONS = "//ul[@role='listbox']//li[@role='option']";
+
+  /** Abre el desplegable y elige la opción por su texto. */
+  public void chooseOption(By trigger, String option) {
+    click(trigger);
+    click(By.xpath(LISTBOX_OPTIONS + "//button[contains(normalize-space(.)," + xpathLiteral(option) + ")]"));
+  }
+
+  /** Textos de las opciones: abre el menú, los lee y lo cierra sin elegir nada. */
+  public List<String> dropdownOptions(By trigger) {
+    click(trigger);
+    expectVisible(By.xpath(LISTBOX_OPTIONS));
+    List<String> texts = driver.findElements(By.xpath(LISTBOX_OPTIONS)).stream()
+        .map(e -> e.getDomProperty("textContent").strip()).toList();
+    click(trigger);
+    return texts;
   }
 
   public List<String> optionTexts(By locator) {

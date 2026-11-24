@@ -3,21 +3,21 @@ equipos y órganos FOE; el efecto se comprueba entrando con el jugador afectado.
 qa-playwright/tests/g-jugadores/jugadores.spec.ts."""
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 
 from qa.app_page import NAV, btn, btn_containing, button, event_card, heading, in_, nav_tab, player_card
 
 pytestmark = pytest.mark.usefixtures("reset_staging")
 
-ROLE_SELECT = "//select[option[@value='super_admin']]"
-ADD_SQUAD_SELECT = "//select[option[normalize-space(.)='+ Añadir otro equipo']]"
+# Desplegables de la ficha: su aria-label lleva el nombre del jugador, así que se localizan por data-testid.
+ROLE_SELECT = "//*[starts-with(@data-testid, 'roster-app-role-select-')]"
+ADD_SQUAD_SELECT = "//*[starts-with(@data-testid, 'roster-add-squad-select-')]"
 
 
 @pytest.mark.case("TC-G01 El super admin asciende a un jugador a admin y este gestiona partidas")
 def test_tc_g01_ascender(app, login_as):
     login_as("superadmin")
     app.open_tab("Jugadores")
-    Select(app.expect_visible(in_(player_card("QA Jugador MAD"), ROLE_SELECT))).select_by_value("admin")
+    app.choose_option(in_(player_card("QA Jugador MAD"), ROLE_SELECT), "Admin (Partidas)")
     app.expect_toast("Ficha actualizada para QA Jugador MAD.")
 
     login_as("player_mad")
@@ -48,7 +48,7 @@ def test_tc_g03_asignar_equipo(app, login_as):
     app.open_tab("Jugadores")
     card = player_card("QA Sin Equipo")
     app.expect_visible(in_(card, "//*[normalize-space(.)='Sin equipo asignado']"))
-    Select(app.expect_visible(in_(card, ADD_SQUAD_SELECT))).select_by_value("FOE")
+    app.choose_option(in_(card, ADD_SQUAD_SELECT), "FOE")
     app.expect_toast("Ficha actualizada para QA Sin Equipo.")
     app.expect_visible(in_(card, "//*[@title='Quitar de FOE']"))
 

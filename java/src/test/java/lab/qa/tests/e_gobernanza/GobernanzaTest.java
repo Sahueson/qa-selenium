@@ -40,9 +40,9 @@ class GobernanzaTest extends BaseTest {
     app.click(button("+ Nueva votación"));
 
     String form = "//form[contains(normalize-space(.),'Convocar votación en Junta Directiva')]";
-    app.selectByText(in(form, "//select[option[normalize-space(.)='Votación de sanción a operador']]"), "Votación de sanción a operador");
-    app.selectByText(in(form, "//select[option[normalize-space(.)='QA Jugador FOE']]"), "QA Jugador FOE");
-    app.selectByValue(in(form, "//select[option[normalize-space(.)='Falta Grave']]"), "grave");
+    app.chooseOption(in(form, "//*[@data-testid='foe-poll-topic-select']"), "Votación de sanción a operador");
+    app.chooseOption(in(form, "//*[@data-testid='foe-sanction-target-select']"), "QA Jugador FOE");
+    app.chooseOption(in(form, "//*[@data-testid='foe-sanction-severity-select']"), "Falta Grave");
     app.setValue(in(form, "//*[self::input or self::textarea][contains(@placeholder,'Art. 51.i')]"), "Art. 36.2 — Baja < 48h");
     app.setValue(in(form, "//*[self::input or self::textarea][contains(@placeholder,'Explica los hechos')]"),
         "Baja sin aviso en la partida del domingo (E2E).");

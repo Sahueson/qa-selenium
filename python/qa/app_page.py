@@ -223,6 +223,22 @@ class AppPage:
         except Exception:
             raise AssertionError(f"{locator[1]} no vale «{value}»") from None
 
+    # ----- Desplegables propios (TacticalSelect): la lista solo existe con el menú abierto -----
+    LISTBOX_OPTIONS = "//ul[@role='listbox']//li[@role='option']"
+
+    def choose_option(self, trigger: Locator, option: str) -> None:
+        """Abre el desplegable y elige la opción por su texto."""
+        self.click(trigger)
+        self.click((By.XPATH, f"{self.LISTBOX_OPTIONS}//button[contains(normalize-space(.), {xpath_literal(option)})]"))
+
+    def dropdown_options(self, trigger: Locator) -> list[str]:
+        """Textos de las opciones: abre el menú, los lee y lo cierra sin elegir nada."""
+        self.click(trigger)
+        self.expect_visible((By.XPATH, self.LISTBOX_OPTIONS))
+        texts = [e.get_attribute("textContent").strip() for e in self.driver.find_elements(By.XPATH, self.LISTBOX_OPTIONS)]
+        self.click(trigger)
+        return texts
+
     def expect_enabled(self, locator: Locator, enabled: bool = True) -> None:
         try:
             WebDriverWait(self.driver, TIMEOUT, 0.2).until(lambda d: d.find_element(*locator).is_enabled() == enabled)
@@ -273,8 +289,8 @@ class AppPage:
         self.wait_for_quiet_network()
 
     # Formulario de inscripción del detalle de partida: equipación y rol.
-    REGISTRATION_GEAR: Locator = (By.XPATH, f"({MODAL}//*[contains(@class,'inscribir-form')]//select)[1]")
-    REGISTRATION_ROLE: Locator = (By.XPATH, f"({MODAL}//*[contains(@class,'inscribir-form')]//select)[2]")
+    REGISTRATION_GEAR: Locator = (By.XPATH, f"{MODAL}//*[@data-testid='event-register-team-select']")
+    REGISTRATION_ROLE: Locator = (By.XPATH, f"{MODAL}//*[@data-testid='event-register-role-select']")
 
     def visible_event_titles(self) -> list[str]:
         """Títulos de las partidas que el usuario ve en la pestaña Partidas."""

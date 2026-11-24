@@ -97,7 +97,7 @@ class CalendarioTest extends BaseTest {
   void tcH03_adminUnEquipo() {
     loginAs("admin_mad");
     openForm();
-    assertEquals(List.of("MAD Irregulars"), app.optionTexts(By.xpath(FORM + "//select")));
+    assertEquals(List.of("MAD Irregulars"), app.dropdownOptions(By.xpath(FORM + "//*[@data-testid='blackout-squad-select']")));
   }
 
   @Test
@@ -107,7 +107,7 @@ class CalendarioTest extends BaseTest {
     loginAs("superadmin");
     openForm();
     assertEquals(List.of("MAD Irregulars", "FOE", "Ambos equipos (MAD Irregulars y FOE)"),
-        app.optionTexts(By.xpath(FORM + "//select")));
+        app.dropdownOptions(By.xpath(FORM + "//*[@data-testid='blackout-squad-select']")));
     // Y ve las fechas de los dos equipos.
     app.expectVisible(By.xpath(blackoutRow("QA · Sin partida FOE")));
     app.expectVisible(By.xpath(blackoutRow("QA · Sin partida MAD")));

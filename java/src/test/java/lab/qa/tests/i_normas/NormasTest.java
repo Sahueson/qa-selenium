@@ -174,7 +174,7 @@ class NormasTest extends BaseTest {
     loginAs("player_mad");
     app.openTab("Normas");
     app.expectVisible(text("Todavía no hay estatutos o normativa publicados para MAD Irregulars."));
-    app.expectCount(By.cssSelector("#doc-squad-select"), 0);
+    app.expectCount(By.cssSelector("[data-testid='docs-squad-select']"), 0);
     app.expectCount(text(title), 0);
   }
 }

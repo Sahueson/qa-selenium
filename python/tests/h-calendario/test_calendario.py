@@ -5,7 +5,6 @@ import time
 
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 
 from qa.app_page import btn, button, contains_text_xpath, in_, xpath_literal
 from qa.dates import in_days
@@ -66,7 +65,7 @@ def test_tc_h02_fin_antes_que_inicio(app, login_as):
 def test_tc_h03_admin_un_equipo(app, login_as):
     login_as("admin_mad")
     open_form(app)
-    options = [o.text for o in Select(app.expect_visible((By.XPATH, f"{FORM}//select"))).options]
+    options = app.dropdown_options((By.XPATH, f"{FORM}//*[@data-testid='blackout-squad-select']"))
     assert options == ["MAD Irregulars"], options
 
 
@@ -74,7 +73,7 @@ def test_tc_h03_admin_un_equipo(app, login_as):
 def test_tc_h04_super_ambos(app, login_as):
     login_as("superadmin")
     open_form(app)
-    options = [o.text for o in Select(app.expect_visible((By.XPATH, f"{FORM}//select"))).options]
+    options = app.dropdown_options((By.XPATH, f"{FORM}//*[@data-testid='blackout-squad-select']"))
     assert options == ["MAD Irregulars", "FOE", "Ambos equipos (MAD Irregulars y FOE)"], options
     # Y ve las fechas de los dos equipos.
     app.expect_visible((By.XPATH, blackout_row("QA · Sin partida FOE")))

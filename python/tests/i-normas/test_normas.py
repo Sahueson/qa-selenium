@@ -135,5 +135,5 @@ def test_tc_i05_otro_equipo_no_ve(app, login_as, files):
     login_as("player_mad")
     app.open_tab("Normas")
     app.expect_visible((By.XPATH, contains_text_xpath("Todavía no hay estatutos o normativa publicados para MAD Irregulars.")))
-    app.expect_count((By.CSS_SELECTOR, "#doc-squad-select"), 0)
+    app.expect_count((By.CSS_SELECTOR, "[data-testid='docs-squad-select']"), 0)
     app.expect_count(doc_title(title), 0)

@@ -38,7 +38,7 @@ class InscripcionesTest extends BaseTest {
     // app no avisa: el aviso solo sale si tienes equipaciones marcadas y no es ninguna de ellas.)
     loginAs("junta2");
     app.openEvent("QA FOE · Inscripción abierta");
-    app.expectValue(REGISTRATION_GEAR, "Tiger Stripe");
+    app.expectText(REGISTRATION_GEAR, "Tiger Stripe");
     app.expectVisible(modalText("No tienes «Tiger Stripe» marcada en tu ficha"));
 
     app.click(modalButton("Apuntarse"));
@@ -54,8 +54,8 @@ class InscripcionesTest extends BaseTest {
   void tcC07_preseleccionaEquipacionFicha() {
     loginAs("junta2"); // ficha: Árido + Médico
     app.openEvent("QA FOE · MilSim próxima"); // sin equipación recomendada
-    app.expectValue(REGISTRATION_GEAR, "Árido");
-    app.expectValue(REGISTRATION_ROLE, "medico");
+    app.expectContainsText(REGISTRATION_GEAR, "Árido");
+    app.expectContainsText(REGISTRATION_ROLE, "Médico");
     app.expectHidden(modalText("No tienes «"));
   }
 

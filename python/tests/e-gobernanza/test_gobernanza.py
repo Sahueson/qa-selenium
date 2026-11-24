@@ -4,7 +4,6 @@ decide el servidor (close_foe_poll). Junta Directiva = QA Super Admin, QA Admin 
 el seed deja cada expediente a falta del voto de junta2, salvo el de recusación."""
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 
 from qa.app_page import btn, btn_containing, button, contains_text_xpath, in_, poll_card
 
@@ -21,11 +20,10 @@ def test_tc_e01_abrir_expediente(app, login_as):
     app.click(button("+ Nueva votación"))
 
     form = "//form[contains(normalize-space(.),'Convocar votación en Junta Directiva')]"
-    select = lambda option: Select(app.expect_visible(  # noqa: E731
-        (By.XPATH, f"{form}//select[option[normalize-space(.)='{option}']]")))
-    select("Votación de sanción a operador").select_by_visible_text("Votación de sanción a operador")
-    select("QA Jugador FOE").select_by_visible_text("QA Jugador FOE")
-    select("Falta Grave").select_by_value("grave")
+    trigger = lambda testid: (By.XPATH, f"{form}//*[@data-testid='{testid}']")  # noqa: E731
+    app.choose_option(trigger("foe-poll-topic-select"), "Votación de sanción a operador")
+    app.choose_option(trigger("foe-sanction-target-select"), "QA Jugador FOE")
+    app.choose_option(trigger("foe-sanction-severity-select"), "Falta Grave")
     app.set_value(in_(form, "//*[self::input or self::textarea][contains(@placeholder,'Art. 51.i')]"), "Art. 36.2 — Baja < 48h")
     app.set_value(in_(form, "//*[self::input or self::textarea][contains(@placeholder,'Explica los hechos')]"),
                   "Baja sin aviso en la partida del domingo (E2E).")

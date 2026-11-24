@@ -25,7 +25,7 @@ def test_tc_c01_preselecciona_equipacion_partida(app, login_as):
     login_as("junta2")
     app.open_event("QA FOE · Inscripción abierta")
 
-    app.expect_value(GEAR, "Tiger Stripe")
+    app.expect_text(GEAR, "Tiger Stripe")
     app.expect_visible(modal_text("No tienes «Tiger Stripe» marcada en tu ficha"))
 
     app.click(modal_button("Apuntarse"))
@@ -40,8 +40,8 @@ def test_tc_c07_preselecciona_equipacion_ficha(app, login_as):
     login_as("junta2")  # ficha: Árido + Médico
     app.open_event("QA FOE · MilSim próxima")  # sin equipación recomendada
 
-    app.expect_value(GEAR, "Árido")
-    app.expect_value(ROLE, "medico")
+    app.expect_contains_text(GEAR, "Árido")
+    app.expect_contains_text(ROLE, "Médico")
     app.expect_hidden(modal_text("No tienes «"))
 
 

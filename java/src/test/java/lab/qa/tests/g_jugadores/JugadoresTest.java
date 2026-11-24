@@ -23,8 +23,8 @@ import org.openqa.selenium.By;
 @DisplayName("Suite G · Gestión de jugadores")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class JugadoresTest extends BaseTest {
-  private static final String ROLE_SELECT = "//select[option[@value='super_admin']]";
-  private static final String ADD_SQUAD_SELECT = "//select[option[normalize-space(.)='+ Añadir otro equipo']]";
+  private static final String ROLE_SELECT = "//*[starts-with(@data-testid,'roster-app-role-select-')]";
+  private static final String ADD_SQUAD_SELECT = "//*[starts-with(@data-testid,'roster-add-squad-select-')]";
 
   @BeforeAll
   static void seed() {
@@ -37,7 +37,7 @@ class JugadoresTest extends BaseTest {
   void tcG01_ascender() {
     loginAs("superadmin");
     app.openTab("Jugadores");
-    app.selectByValue(in(playerCard("QA Jugador MAD"), ROLE_SELECT), "admin");
+    app.chooseOption(in(playerCard("QA Jugador MAD"), ROLE_SELECT), "Admin (Partidas)");
     app.expectToast("Ficha actualizada para QA Jugador MAD.");
 
     loginAs("player_mad");
@@ -72,7 +72,7 @@ class JugadoresTest extends BaseTest {
     app.openTab("Jugadores");
     String card = playerCard("QA Sin Equipo");
     app.expectVisible(in(card, "//*[normalize-space(.)='Sin equipo asignado']"));
-    app.selectByValue(in(card, ADD_SQUAD_SELECT), "FOE");
+    app.chooseOption(in(card, ADD_SQUAD_SELECT), "FOE");
     app.expectToast("Ficha actualizada para QA Sin Equipo.");
     app.expectVisible(in(card, "//*[@title='Quitar de FOE']"));
 
