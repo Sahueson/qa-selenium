@@ -1,6 +1,7 @@
 package lab.qa.pages;
 
 import java.time.Duration;
+import io.qameta.allure.Allure;
 import java.util.List;
 import lab.qa.support.Env;
 import org.openqa.selenium.By;
@@ -189,14 +190,18 @@ public class AppPage {
 
   /** Toast (.tactical-toast) que contiene el texto. */
   public void expectToast(String text) {
-    expectVisible(By.xpath("//*[contains(@class,'tactical-toast')][contains(normalize-space(.)," + xpathLiteral(text) + ")]"));
+    Allure.step("Aviso «" + text + "»", () -> {
+      expectVisible(By.xpath("//*[contains(@class,'tactical-toast')][contains(normalize-space(.)," + xpathLiteral(text) + ")]"));
+    });
   }
 
   public void click(By locator) {
-    new WebDriverWait(driver, TIMEOUT)
-        .withMessage("No se puede pulsar " + locator)
-        .until(ExpectedConditions.elementToBeClickable(locator))
-        .click();
+    Allure.step("Pulsar " + locator, () -> {
+      new WebDriverWait(driver, TIMEOUT)
+          .withMessage("No se puede pulsar " + locator)
+          .until(ExpectedConditions.elementToBeClickable(locator))
+          .click();
+    });
   }
 
   /**
@@ -306,8 +311,10 @@ public class AppPage {
 
   /** Abre el desplegable y elige la opción por su texto. */
   public void chooseOption(By trigger, String option) {
-    click(trigger);
-    click(By.xpath(LISTBOX_OPTIONS + "//button[contains(normalize-space(.)," + xpathLiteral(option) + ")]"));
+    Allure.step("Elegir «" + option + "» en el desplegable", () -> {
+      click(trigger);
+      click(By.xpath(LISTBOX_OPTIONS + "//button[contains(normalize-space(.)," + xpathLiteral(option) + ")]"));
+    });
   }
 
   /** Textos de las opciones: abre el menú, los lee y lo cierra sin elegir nada. */
@@ -342,10 +349,16 @@ public class AppPage {
   // ---------- Login QA ----------
 
   public void open() {
-    driver.get(Env.baseUrl() + "/");
+    Allure.step("Abrir la app", () -> {
+      driver.get(Env.baseUrl() + "/");
+    });
   }
 
   public void login(String email, String password) {
+    Allure.step("Iniciar sesión con el usuario QA", () -> doLogin(email, password));
+  }
+
+  private void doLogin(String email, String password) {
     WebElement emailInput = expectVisible(By.cssSelector("[data-testid='qa-email-input']"));
     emailInput.clear();
     emailInput.sendKeys(email);
@@ -358,7 +371,9 @@ public class AppPage {
   // ---------- Navegación y partidas ----------
 
   public void openTab(String label) {
-    click(navTab(label));
+    Allure.step("Ir a la pestaña «" + label + "»", () -> {
+      click(navTab(label));
+    });
   }
 
   /**
@@ -366,6 +381,10 @@ public class AppPage {
    * espera a la petición lanzada tras el clic y a que la red quede en reposo.
    */
   public void openEvent(String title) {
+    Allure.step("Abrir la partida «" + title + "»", () -> doOpenEvent(title));
+  }
+
+  private void doOpenEvent(String title) {
     openTab("Partidas");
     long before = requestsStarted();
     click(By.xpath(eventCard(title) + "//button[contains(@class,'tactical-btn--blue')]"));
