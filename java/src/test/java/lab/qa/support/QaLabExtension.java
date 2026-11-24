@@ -3,6 +3,7 @@ package lab.qa.support;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import io.qameta.allure.Allure;
+import io.qameta.allure.AttachmentOptions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class QaLabExtension implements BeforeEachCallback, AfterEachCallback, Te
       saveJpeg(((ChromeDriver) driver).getScreenshotAs(OutputType.BYTES), file);
       ctx.getStore(NS).put("evidence", "target/evidence/" + file.getName());
       try (FileInputStream in = new FileInputStream(file)) {
-        Allure.addAttachment("Captura final", "image/jpeg", in, ".jpg");
+        Allure.attachment("Captura final", "image/jpeg", in, AttachmentOptions.withFileExtension(".jpg"));
       }
     } catch (Exception e) {
       System.err.println("[qa-lab] Sin captura para " + ctx.getDisplayName() + ": " + e.getMessage());
