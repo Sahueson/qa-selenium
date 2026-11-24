@@ -39,10 +39,12 @@ def first_line(excinfo) -> str:
     return line.replace(pwd, "***") if pwd else line
 
 
-@pytest.fixture(autouse=True)
-def _allure_title(request):
-    """Nombre del caso en el informe de Allure (el mismo que en la web)."""
-    allure.dynamic.title(case_name(request.node))
+def pytest_collection_modifyitems(items):
+    """Nombre del caso en el informe de Allure (el mismo que en la web, no el de la función)."""
+    for item in items:
+        name = case_name(item)
+        if name != item.name and hasattr(item, "obj"):
+            item.obj.__allure_display_name__ = name.replace("{", "{{").replace("}", "}}")
 
 
 @pytest.fixture
