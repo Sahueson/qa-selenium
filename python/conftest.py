@@ -48,6 +48,7 @@ def pytest_collection_modifyitems(items):
 
 
 @pytest.fixture
+@allure.title("Abrir el navegador")
 def driver(request):
     drv = browser.start()
     yield drv
@@ -65,11 +66,13 @@ def driver(request):
 
 
 @pytest.fixture
+@allure.title("Preparar la página de la app")
 def app(driver) -> AppPage:
     return AppPage(driver)
 
 
 @pytest.fixture
+@allure.title("Registrar el rol del test")
 def role(request):
     """Rol con el que corre el test (columna "role" de la web). Se queda el primero."""
     def set_role(description: str) -> None:
@@ -79,6 +82,7 @@ def role(request):
 
 
 @pytest.fixture
+@allure.title("Preparar el inicio de sesión QA")
 def login_as(app, role):
     """Entra con un usuario QA. Admite cambiar de usuario dentro del mismo test."""
     def login(key: str) -> QaUser:
@@ -95,6 +99,7 @@ def login_as(app, role):
 
 
 @pytest.fixture(scope="module")
+@allure.title("Dejar el staging como el seed")
 def reset_staging():
     """Vuelve a dejar el staging como el seed al empezar el módulo. La reserva ya la tiene
     with-staging.js (QA_LOCK_HELD=1): reset.js no la vuelve a pedir."""
