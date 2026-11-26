@@ -29,6 +29,7 @@ public class QaLabExtension implements BeforeEachCallback, AfterEachCallback, Te
 
   @Override
   public void beforeEach(ExtensionContext ctx) {
+    LiveEvents.emit("test_started", ctx.getDisplayName());
     BaseTest test = (BaseTest) ctx.getRequiredTestInstance();
     ChromeDriver driver = Browser.start();
     test.attach(driver);
@@ -73,6 +74,7 @@ public class QaLabExtension implements BeforeEachCallback, AfterEachCallback, Te
   @Override
   public void testDisabled(ExtensionContext ctx, Optional<String> reason) {
     Results.add(new Results.TestResult(ctx.getDisplayName(), "skipped", 0, null, null, null));
+    LiveEvents.emit("test_skipped", ctx.getDisplayName());
   }
 
   private void record(ExtensionContext ctx, String status, Throwable cause) {
@@ -86,6 +88,8 @@ public class QaLabExtension implements BeforeEachCallback, AfterEachCallback, Te
         test == null ? null : test.role(),
         cause == null ? null : firstLine(cause),
         store.get("evidence", String.class)));
+    LiveEvents.emit("test_" + status, ctx.getDisplayName());
+    if (cause != null) LiveEvents.emit("log", "   ↳ " + firstLine(cause));
   }
 
   private static String firstLine(Throwable t) {

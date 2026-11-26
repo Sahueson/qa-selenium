@@ -43,6 +43,12 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Listener de la pantalla en vivo de la web (LiveListener): necesita la API del launcher. -->
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- Allure: informe con pasos y capturas. La API (Allure.step, addAttachment) viene en allure-java-commons. -->
     <dependency>
       <groupId>io.qameta.allure</groupId>

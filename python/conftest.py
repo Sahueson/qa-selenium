@@ -14,7 +14,7 @@ import allure
 import pytest
 from PIL import Image
 
-from qa import browser, results
+from qa import browser, live, results
 from qa.app_page import LOGIN_BUTTON, AppPage
 from qa.env import qa_password, shared_dir
 from qa.users import QaUser, qa_user
@@ -108,6 +108,21 @@ def reset_staging():
                        check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
+# ---------- Pantalla en vivo de la web (no hacen nada sin RUN_ID) ----------
+
+def pytest_collection_finish(session):
+    live.emit("plan", str(len(session.items)))
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_setup(item):
+    live.emit("test_started", case_name(item))
+
+
+def pytest_sessionfinish(session, exitstatus):
+    live.flush()
+
+
 # ---------- Resultado de cada test -> result.json ----------
 
 @pytest.hookimpl(wrapper=True)
@@ -138,3 +153,6 @@ def _record(item) -> None:
             break
     results.add(case_name(item), status, duration_ms, getattr(item, "qa_role", None), error,
                 getattr(item, "qa_evidence", None))
+    live.emit({"passed": "test_passed", "failed": "test_failed"}.get(status, "test_skipped"), case_name(item))
+    if error:
+        live.emit("log", f"   ↳ {error}")
